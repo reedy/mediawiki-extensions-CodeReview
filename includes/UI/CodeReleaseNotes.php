@@ -4,6 +4,7 @@ namespace MediaWiki\Extension\CodeReview\UI;
 
 use HTMLForm;
 use MediaWiki\Extension\CodeReview\Backend\CodeRevision;
+use MediaWiki\MediaWikiServices;
 use SpecialPage;
 
 class CodeReleaseNotes extends CodeView {
@@ -82,7 +83,9 @@ class CodeReleaseNotes extends CodeView {
 
 	protected function showReleaseNotes() {
 		global $wgOut;
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_REPLICA );
 		$where = [];
 		if ( $this->mEndRev ) {
 			$where[] = 'cr_id BETWEEN ' . intval( $this->mStartRev ) . ' AND ' .

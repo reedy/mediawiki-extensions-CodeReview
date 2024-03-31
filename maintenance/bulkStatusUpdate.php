@@ -65,7 +65,7 @@ class BulkStatusUpdate extends Maintenance {
 			$this->fatalError( "'{$username}' does not have the 'codereview-set-status' right" );
 		}
 
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = $this->getDB( DB_REPLICA );
 
 		$res = $dbr->select(
 			'code_rev',

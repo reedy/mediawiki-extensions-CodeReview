@@ -61,7 +61,9 @@ class CodeRepository {
 	 * @return CodeRepository|null
 	 */
 	public static function newFromName( $name ) {
-		$dbw = wfGetDB( DB_REPLICA );
+		$dbw = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_REPLICA );
 		$row = $dbw->selectRow(
 			'code_repo',
 			[
@@ -86,7 +88,9 @@ class CodeRepository {
 	 * @return CodeRepository|null
 	 */
 	public static function newFromId( $id ) {
-		$dbw = wfGetDB( DB_REPLICA );
+		$dbw = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_REPLICA );
 		$row = $dbw->selectRow(
 			'code_repo',
 			[
@@ -123,7 +127,9 @@ class CodeRepository {
 	 * @return array
 	 */
 	public static function getRepoList() {
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_REPLICA );
 		$options = [ 'ORDER BY' => 'repo_name' ];
 		$res = $dbr->select( 'code_repo', '*', [], __METHOD__, $options );
 		$repos = [];
@@ -186,7 +192,9 @@ class CodeRepository {
 	 * @return int
 	 */
 	public function getLastStoredRev() {
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_REPLICA );
 		$row = $dbr->selectField(
 			'code_rev',
 			'MAX(cr_id)',
@@ -207,7 +215,9 @@ class CodeRepository {
 			$cache->makeKey( 'codereview-authors', $this->getId() ),
 			$cache::TTL_DAY,
 			function () use ( $method ) {
-				$dbr = wfGetDB( DB_REPLICA );
+				$dbr = MediaWikiServices::getInstance()
+					->getDBLoadBalancer()
+					->getMaintenanceConnectionRef( DB_REPLICA );
 				$res = $dbr->select(
 					'code_rev',
 					[ 'cr_author', 'MAX(cr_timestamp) AS time' ],
@@ -255,7 +265,9 @@ class CodeRepository {
 			$cache->makeKey( 'codereview-tags', $this->getId() ),
 			$cache::TTL_DAY,
 			function () use ( $method ) {
-				$dbr = wfGetDB( DB_REPLICA );
+				$dbr = MediaWikiServices::getInstance()
+					->getDBLoadBalancer()
+					->getMaintenanceConnectionRef( DB_REPLICA );
 				$res = $dbr->select(
 					'code_tags',
 					[ 'ct_tag', 'COUNT(*) AS revs' ],
@@ -290,7 +302,9 @@ class CodeRepository {
 		if ( !$this->isValidRev( $id ) ) {
 			return null;
 		}
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_REPLICA );
 		$row = $dbr->selectRow(
 			'code_rev',
 			'*',
@@ -394,7 +408,9 @@ class CodeRepository {
 			) {
 				// Check permanent DB storage cache
 				if ( $useCache !== 'skipcache' ) {
-					$dbr = wfGetDB( DB_REPLICA );
+					$dbr = MediaWikiServices::getInstance()
+						->getDBLoadBalancer()
+						->getMaintenanceConnectionRef( DB_REPLICA );
 					$row = $dbr->selectRow(
 						'code_rev',
 						[ 'cr_diff', 'cr_flags' ],
@@ -445,7 +461,9 @@ class CodeRepository {
 				$storedData = $data;
 				$flags = $blobStore->compressData( $storedData );
 
-				$dbw = wfGetDB( DB_PRIMARY );
+				$dbw = MediaWikiServices::getInstance()
+					->getDBLoadBalancer()
+					->getMaintenanceConnectionRef( DB_PRIMARY );
 				$dbw->update(
 					'code_rev',
 					[ 'cr_diff' => $storedData, 'cr_flags' => $flags ],
@@ -484,7 +502,9 @@ class CodeRepository {
 		$blobStore = $services->getBlobStore();
 		// @phan-suppress-next-line PhanUndeclaredMethod
 		$flags = $blobStore->compressData( $storedData );
-		$dbw = wfGetDB( DB_PRIMARY );
+		$dbw = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_PRIMARY );
 		$dbw->update(
 			'code_rev',
 			[ 'cr_diff' => $storedData, 'cr_flags' => $flags ],
@@ -515,7 +535,9 @@ class CodeRepository {
 		if ( !$userId ) {
 			return false;
 		}
-		$dbw = wfGetDB( DB_PRIMARY );
+		$dbw = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_PRIMARY );
 		// Insert in the author -> user link row.
 		// Skip existing rows.
 		$dbw->insert(
@@ -554,7 +576,9 @@ class CodeRepository {
 	 * @return bool success
 	 */
 	public function unlinkUser( $author ) {
-		$dbw = wfGetDB( DB_PRIMARY );
+		$dbw = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_PRIMARY );
 		$dbw->delete(
 			'code_authors',
 			[
@@ -579,7 +603,9 @@ class CodeRepository {
 			return self::$userLinks[$author];
 		}
 
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_REPLICA );
 		$wikiUser = $dbr->selectField(
 			'code_authors',
 			'ca_user_text',
@@ -613,7 +639,9 @@ class CodeRepository {
 			return self::$authorLinks[$name];
 		}
 
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_REPLICA );
 		self::$authorLinks[$name] = $dbr->selectField(
 			'code_authors',
 			'ca_author',

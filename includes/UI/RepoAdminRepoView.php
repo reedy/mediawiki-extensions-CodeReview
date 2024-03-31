@@ -4,6 +4,7 @@ namespace MediaWiki\Extension\CodeReview\UI;
 
 use HTMLForm;
 use MediaWiki\Extension\CodeReview\Backend\CodeRepository;
+use MediaWiki\MediaWikiServices;
 use Title;
 use User;
 
@@ -58,7 +59,9 @@ class RepoAdminRepoView {
 			&& $this->user->matchEditToken( $wgRequest->getVal( 'wpEditToken' ), $this->repoName )
 		) {
 			// @todo log
-			$dbw = wfGetDB( DB_PRIMARY );
+			$dbw = MediaWikiServices::getInstance()
+				->getDBLoadBalancer()
+				->getMaintenanceConnectionRef( DB_PRIMARY );
 			if ( $repoExists ) {
 				$dbw->update(
 					'code_repo',

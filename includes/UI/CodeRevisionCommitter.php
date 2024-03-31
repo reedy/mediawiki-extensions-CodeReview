@@ -2,6 +2,7 @@
 
 namespace MediaWiki\Extension\CodeReview\UI;
 
+use MediaWiki\MediaWikiServices;
 use MediaWiki\Permissions\Authority;
 use RequestContext;
 use SpecialPage;
@@ -90,7 +91,9 @@ class CodeRevisionCommitter extends CodeRevisionView {
 			return false;
 		}
 
-		$dbw = wfGetDB( DB_PRIMARY );
+		$dbw = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_PRIMARY );
 		$dbw->startAtomic( __METHOD__ );
 
 		// Change the status if allowed

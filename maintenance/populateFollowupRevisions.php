@@ -48,7 +48,7 @@ class PopulateFollowupRevisions extends Maintenance {
 
 		$dryrun = $this->hasOption( 'dry-run' );
 
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = $this->getDB( DB_REPLICA );
 
 		$res = $dbr->select(
 			'code_rev',

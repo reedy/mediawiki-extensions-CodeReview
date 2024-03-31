@@ -42,7 +42,7 @@ class PopulateCaUserColumn extends Maintenance {
 			$this->fatalError( "Repo '{$repoName}' is not a valid repository" );
 		}
 
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = $this->getDB( DB_REPLICA );
 
 		$res = $dbr->select(
 			'code_authors',
@@ -65,7 +65,7 @@ class PopulateCaUserColumn extends Maintenance {
 		// actually doing stuff, too, instead of goofing off
 		$this->output( "{$numRows} authors with ca_user = 0 in the table...\n" );
 
-		$dbw = wfGetDB( DB_PRIMARY );
+		$dbw = $this->getDB( DB_PRIMARY );
 		$this->beginTransaction( $dbw, __METHOD__ );
 		$userIdentityLookup = MediaWikiServices::getInstance()->getUserIdentityLookup();
 

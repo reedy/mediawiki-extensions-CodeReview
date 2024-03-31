@@ -74,7 +74,7 @@ class ApiQueryCodeRevisions extends ApiQueryBase {
 		$limit = $params['limit'];
 
 		if ( $revsSet ) {
-			$db = wfGetDB( DB_REPLICA );
+			$db = $this->getDB();
 
 			$query = $pager->getQueryInfo();
 

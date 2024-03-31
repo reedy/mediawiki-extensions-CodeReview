@@ -30,7 +30,7 @@ class GetRevisionDiffs extends Maintenance {
 			$this->fatalError( "Repo '{$repoName}' is not a valid Repository" );
 		}
 
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = $this->getDB( DB_REPLICA );
 		$lbFactory = MediaWikiServices::getInstance()->getDBLoadBalancerFactory();
 
 		$res = $dbr->select(

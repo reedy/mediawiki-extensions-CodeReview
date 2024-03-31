@@ -360,7 +360,9 @@ class CodeRevision {
 		}
 
 		// Get the old status from the primary database
-		$dbw = wfGetDB( DB_PRIMARY );
+		$dbw = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_PRIMARY );
 		$this->oldStatus = $dbw->selectField(
 			'code_rev',
 			'cr_status',
@@ -430,7 +432,9 @@ class CodeRevision {
 	}
 
 	public function save() {
-		$dbw = wfGetDB( DB_PRIMARY );
+		$dbw = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_PRIMARY );
 		$dbw->startAtomic( __METHOD__ );
 		$userOptionsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
 
@@ -624,7 +628,9 @@ class CodeRevision {
 	 * @return array
 	 */
 	public function getAffectedBugRevs() {
-		$dbw = wfGetDB( DB_PRIMARY );
+		$dbw = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_PRIMARY );
 
 		// Update bug references table...
 		$affectedBugs = [];
@@ -669,7 +675,9 @@ class CodeRevision {
 	 * @return IResultWrapper
 	 */
 	public function getModifiedPaths() {
-		return wfGetDB( DB_REPLICA )->select(
+		return MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_REPLICA )->select(
 			'code_paths',
 			[ 'cp_path', 'cp_action' ],
 			[ 'cp_repo_id' => $this->repoId, 'cp_rev_id' => $this->id ],
@@ -710,7 +718,9 @@ class CodeRevision {
 		if ( !strlen( $text ) ) {
 			return 0;
 		}
-		$dbw = wfGetDB( DB_PRIMARY );
+		$dbw = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_PRIMARY );
 		$data = $this->commentData( $text, $performer, $parent );
 
 		$dbw->startAtomic( __METHOD__ );
@@ -787,7 +797,9 @@ class CodeRevision {
 	 * @return array
 	 */
 	protected function commentData( $text, Authority $performer, $parent = null ) {
-		$dbw = wfGetDB( DB_PRIMARY );
+		$dbw = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_PRIMARY );
 		$ts = wfTimestamp( TS_MW );
 
 		return [
@@ -812,7 +824,9 @@ class CodeRevision {
 		if ( $parent ) {
 			// We construct a threaded sort key by concatenating the timestamps
 			// of all our parent comments
-			$dbw = wfGetDB( DB_PRIMARY );
+			$dbw = MediaWikiServices::getInstance()
+				->getDBLoadBalancer()
+				->getMaintenanceConnectionRef( DB_PRIMARY );
 			$parentKey = $dbw->selectField(
 				'code_comment',
 				'cc_sortkey',
@@ -834,7 +848,9 @@ class CodeRevision {
 	 * @return array
 	 */
 	public function getComments() {
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_REPLICA );
 		$result = $dbr->select(
 			'code_comment',
 			[
@@ -862,7 +878,9 @@ class CodeRevision {
 	 * @return int
 	 */
 	public function getCommentCount() {
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_REPLICA );
 		return $dbr->selectRowCount(
 			'code_comment',
 			[ 'cc_id' ],
@@ -878,7 +896,9 @@ class CodeRevision {
 	 * @return array
 	 */
 	public function getPropChanges() {
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_REPLICA );
 		$result = $dbr->select(
 			[ 'code_prop_changes', 'user' ],
 			[
@@ -908,7 +928,9 @@ class CodeRevision {
 	 * @return array
 	 */
 	public function getPropChangeUsers() {
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_REPLICA );
 		$result = $dbr->select(
 			'code_prop_changes',
 			'DISTINCT(cpc_user)',
@@ -938,7 +960,9 @@ class CodeRevision {
 	 * @return array
 	 */
 	protected function getCommentingUsers() {
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_REPLICA );
 		$res = $dbr->select(
 			'code_comment',
 			'DISTINCT(cc_user)',
@@ -967,7 +991,9 @@ class CodeRevision {
 	 */
 	public function getFollowupRevisions() {
 		$refs = [];
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_REPLICA );
 		$res = $dbr->select(
 			[ 'code_relations', 'code_rev' ],
 			[ 'cr_id', 'cr_status', 'cr_timestamp', 'cr_author', 'cr_message' ],
@@ -994,7 +1020,9 @@ class CodeRevision {
 	 */
 	public function getFollowedUpRevisions() {
 		$refs = [];
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_REPLICA );
 		$res = $dbr->select(
 			[ 'code_relations', 'code_rev' ],
 			[ 'cr_id', 'cr_status', 'cr_timestamp', 'cr_author', 'cr_message' ],
@@ -1040,7 +1068,9 @@ class CodeRevision {
 	 * @param array $data
 	 */
 	private function addReferences( $data ) {
-		$dbw = wfGetDB( DB_PRIMARY );
+		$dbw = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_PRIMARY );
 		$dbw->insert( 'code_relations', $data, __METHOD__, [ 'IGNORE' ] );
 	}
 
@@ -1069,7 +1099,9 @@ class CodeRevision {
 	 * @param array $revs array of revision IDs
 	 */
 	public function removeReferencesFrom( $revs ) {
-		$dbw = wfGetDB( DB_PRIMARY );
+		$dbw = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_PRIMARY );
 		$dbw->delete( 'code_relations', [
 				'cf_repo_id' => $this->getRepoId(),
 				'cf_from' => $revs,
@@ -1084,7 +1116,9 @@ class CodeRevision {
 	 * @param array $revs array of revision IDs
 	 */
 	public function removeReferencesTo( $revs ) {
-		$dbw = wfGetDB( DB_PRIMARY );
+		$dbw = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_PRIMARY );
 		$dbw->delete( 'code_relations', [
 				'cf_repo_id' => $this->getRepoId(),
 				'cf_from' => $this->getId(),
@@ -1099,7 +1133,9 @@ class CodeRevision {
 	 * @return array of CodeSignoff objects
 	 */
 	public function getSignoffs( $from = DB_REPLICA ) {
-		$db = wfGetDB( $from );
+		$db = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( $from );
 		$result = $db->select(
 			'code_signoffs',
 			[ 'cs_user', 'cs_user_text', 'cs_flag', 'cs_timestamp', 'cs_timestamp_struck' ],
@@ -1125,8 +1161,13 @@ class CodeRevision {
 	 *   a separate sign-off
 	 */
 	public function addSignoff( $performer, $flags ) {
-		$dbw = wfGetDB( DB_PRIMARY );
+		$dbw = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_PRIMARY );
 		$rows = [];
+		$infinity = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_REPLICA )->getInfinity();
 		foreach ( (array)$flags as $flag ) {
 			$rows[] = [
 				'cs_repo_id' => $this->repoId,
@@ -1135,7 +1176,7 @@ class CodeRevision {
 				'cs_user_text' => $performer->getUser()->getName(),
 				'cs_flag' => $flag,
 				'cs_timestamp' => $dbw->timestamp(),
-				'cs_timestamp_struck' => wfGetDB( DB_REPLICA )->getInfinity()
+				'cs_timestamp_struck' => $infinity,
 			];
 		}
 		$dbw->insert( 'code_signoffs', $rows, __METHOD__, [ 'IGNORE' ] );
@@ -1163,7 +1204,9 @@ class CodeRevision {
 	 * @return array
 	 */
 	public function getTags( $from = DB_REPLICA ) {
-		$db = wfGetDB( $from );
+		$db = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( $from );
 		$result = $db->select(
 			'code_tags',
 			[ 'ct_tag' ],
@@ -1195,7 +1238,9 @@ class CodeRevision {
 		$addTags = array_diff( $addTags, $tagsNow );
 		$removeTags = array_intersect( $removeTags, $tagsNow );
 		// Do the queries
-		$dbw = wfGetDB( DB_PRIMARY );
+		$dbw = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_PRIMARY );
 		if ( $addTags ) {
 			$dbw->insert(
 				'code_tags',
@@ -1288,7 +1333,9 @@ class CodeRevision {
 	 * @return bool|int
 	 */
 	public function getPrevious( $path = '' ) {
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_REPLICA );
 		$encId = $dbr->addQuotes( $this->id );
 		$tables = [ 'code_rev' ];
 		if ( $path != '' ) {
@@ -1319,7 +1366,9 @@ class CodeRevision {
 	 * @return bool|int
 	 */
 	public function getNext( $path = '' ) {
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_REPLICA );
 		$encId = $dbr->addQuotes( $this->id );
 		$tables = [ 'code_rev' ];
 		if ( $path != '' ) {
@@ -1364,7 +1413,9 @@ class CodeRevision {
 	 * @return bool|int
 	 */
 	public function getNextUnresolved( $path = '' ) {
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_REPLICA );
 		$encId = $dbr->addQuotes( $this->id );
 		$tables = [ 'code_rev' ];
 		if ( $path != '' ) {

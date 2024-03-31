@@ -41,7 +41,7 @@ class CodeReviewApiTest extends ApiTestCase {
 	}
 
 	private function createRepo() {
-		$dbw = wfGetDB( DB_PRIMARY );
+		$dbw = $this->getDb();
 		$dbw->insert(
 			'code_repo',
 			[

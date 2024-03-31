@@ -2,6 +2,7 @@
 
 namespace MediaWiki\Extension\CodeReview\Backend;
 
+use MediaWiki\MediaWikiServices;
 use stdClass;
 
 /**
@@ -72,7 +73,10 @@ class CodeSignoff {
 	 * @return bool Whether this sign-off has been struck
 	 */
 	public function isStruck() {
-		return $this->timestampStruck !== wfGetDB( DB_REPLICA )->getInfinity();
+		$db = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_REPLICA );
+		return $this->timestampStruck !== $db->getInfinity();
 	}
 
 	/**
@@ -90,7 +94,9 @@ class CodeSignoff {
 		if ( $this->isStruck() ) {
 			return;
 		}
-		$dbw = wfGetDB( DB_PRIMARY );
+		$dbw = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_PRIMARY );
 		$dbw->update(
 			'code_signoffs',
 			[ 'cs_timestamp_struck' => $dbw->timestamp() ],
@@ -150,7 +156,9 @@ class CodeSignoff {
 		if ( count( $parts ) != 3 ) {
 			return null;
 		}
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_REPLICA );
 		$row = $dbr->selectRow(
 			'code_signoffs',
 			[

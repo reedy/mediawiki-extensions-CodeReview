@@ -2,6 +2,7 @@
 
 namespace MediaWiki\Extension\CodeReview\Backend;
 
+use MediaWiki\MediaWikiServices;
 use stdClass;
 
 /**
@@ -52,7 +53,9 @@ class CodeComment {
 	 * @return CodeComment
 	 */
 	public static function newFromID( $cc_id, CodeRevision $rev ) {
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_REPLICA );
 		$row = $dbr->selectRow(
 			'code_comment',
 			[

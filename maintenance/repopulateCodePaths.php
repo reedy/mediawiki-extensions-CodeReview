@@ -43,7 +43,7 @@ class RepopulateCodePaths extends Maintenance {
 
 		$revisions = range( $start, $end );
 
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = $this->getDB( DB_REPLICA );
 
 		$res = $dbr->select(
 			'code_paths',
@@ -52,7 +52,7 @@ class RepopulateCodePaths extends Maintenance {
 			__METHOD__
 		);
 
-		$dbw = wfGetDB( DB_PRIMARY );
+		$dbw = $this->getDB( DB_PRIMARY );
 		$this->beginTransaction( $dbw, __METHOD__ );
 
 		foreach ( $res as $row ) {

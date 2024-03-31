@@ -81,7 +81,9 @@ class RepoStats {
 	}
 
 	private function generate() {
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_REPLICA );
 
 		$this->revisions = $dbr->selectField( 'code_rev',
 			'COUNT(*)',
@@ -135,7 +137,9 @@ class RepoStats {
 	 */
 	private function getAuthorStatusCounts( $status ) {
 		$array = [];
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_REPLICA );
 		$res = $dbr->select( 'code_rev',
 			[ 'COUNT(*) AS revs', 'cr_author' ],
 			[ 'cr_repo_id' => $this->repo->getId(), 'cr_status' => $status ],
@@ -175,7 +179,9 @@ class RepoStats {
 	 */
 	private function getStatusPath( $path, $status ) {
 		$array = [];
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_REPLICA );
 		$res = $dbr->select(
 			[ 'code_paths', 'code_rev' ],
 			[ 'COUNT(*) AS revs', 'cr_author' ],

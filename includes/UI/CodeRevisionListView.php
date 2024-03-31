@@ -5,6 +5,7 @@ namespace MediaWiki\Extension\CodeReview\UI;
 use Html;
 use MediaWiki\Extension\CodeReview\Backend\CodeRepository;
 use MediaWiki\Extension\CodeReview\Backend\CodeRevision;
+use MediaWiki\MediaWikiServices;
 use OutputPage;
 use RequestContext;
 use SpecialPage;
@@ -113,7 +114,9 @@ class CodeRevisionListView extends CodeView {
 		}
 
 		// Get the total count across all pages
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_REPLICA );
 		$revCount = $this->getRevCount( $dbr );
 
 		$pager = $this->getPager();
@@ -166,7 +169,9 @@ class CodeRevisionListView extends CodeView {
 		$status = $wgRequest->getVal( 'wpStatus' );
 
 		// Grab data from the DB
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_REPLICA );
 		$revObjects = [];
 		$res = $dbr->select(
 			'code_rev', '*',
