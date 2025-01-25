@@ -159,7 +159,7 @@ class CodeRevisionView extends CodeView {
 			$this->mRev->getIdString();
 		$htmlTitle = $this->mRev->getIdString() . wfMessage( 'word-separator' )->text() .
 			$this->mRepo->getName();
-		$wgOut->setPageTitle( wfMessage( 'code-rev-title', $pageTitle ) );
+		$wgOut->setPageTitle( wfMessage( 'code-rev-title', $pageTitle )->text() );
 		$wgOut->setHTMLTitle( wfMessage( 'code-rev-title', $htmlTitle ) );
 
 		$linkRenderer = MediaWikiServices::getInstance()->getLinkRenderer();
