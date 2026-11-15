@@ -4,6 +4,8 @@ namespace MediaWiki\Extension\CodeReview\Backend;
 
 use DOMDocument;
 use Exception;
+use MediaWiki\Shell\Shell;
+use Wikimedia\Timestamp\TimestampFormat;
 
 /**
  * Using the thingy-bobber
@@ -25,10 +27,10 @@ class SubversionShell extends SubversionAdaptor {
 		$command = sprintf(
 			'svn info %s %s',
 			$this->getExtraArgs(),
-			wfEscapeShellArg( $this->mRepoPath )
+			Shell::escape( $this->mRepoPath )
 		);
 
-		$result = wfShellExec( $command );
+		$result = Shell::command( $command );
 		if ( $result == '' ) {
 			return false;
 		} elseif ( str_contains( $result, 'No repository found' ) ) {
@@ -46,10 +48,10 @@ class SubversionShell extends SubversionAdaptor {
 		$command = sprintf(
 			'svn cat %s %s',
 			$this->getExtraArgs(),
-			wfEscapeShellArg( $this->mRepoPath . $path )
+			Shell::escape( $this->mRepoPath . $path )
 		);
 
-		return wfShellExec( $command );
+		return Shell::command( $command );
 	}
 
 	/** @inheritDoc */
@@ -59,10 +61,10 @@ class SubversionShell extends SubversionAdaptor {
 			intval( $rev1 ),
 			intval( $rev2 ),
 			$this->getExtraArgs(),
-			wfEscapeShellArg( $this->mRepoPath . $path )
+			Shell::escape( $this->mRepoPath . $path )
 		);
 
-		return wfShellExec( $command );
+		return Shell::command( $command );
 	}
 
 	/** @inheritDoc */
@@ -70,13 +72,13 @@ class SubversionShell extends SubversionAdaptor {
 		$lang = wfIsWindows() ? '' : 'LC_ALL=en_US.utf-8 ';
 		$command = sprintf(
 			"{$lang}svn log -v -r%s:%s %s %s",
-			wfEscapeShellArg( $this->_rev( $startRev, 'BASE' ) ),
-			wfEscapeShellArg( $this->_rev( $endRev, 'HEAD' ) ),
+			Shell::escape( $this->_rev( $startRev, 'BASE' ) ),
+			Shell::escape( $this->_rev( $endRev, 'HEAD' ) ),
 			$this->getExtraArgs(),
-			wfEscapeShellArg( $this->mRepoPath . $path )
+			Shell::escape( $this->mRepoPath . $path )
 		);
 
-		$lines = explode( "\n", wfShellExec( $command ) );
+		$lines = explode( "\n", Shell::command( $command ) );
 		$out = [];
 
 		$divider = str_repeat( '-', 72 );
@@ -178,13 +180,13 @@ class SubversionShell extends SubversionAdaptor {
 	public function getDirList( $path, $rev = null ) {
 		$command = sprintf(
 			'svn list --xml -r%s %s %s',
-			wfEscapeShellArg( $this->_rev( $rev, 'HEAD' ) ),
+			Shell::escape( $this->_rev( $rev, 'HEAD' ) ),
 			$this->getExtraArgs(),
-			wfEscapeShellArg( $this->mRepoPath . $path )
+			Shell::escape( $this->mRepoPath . $path )
 		);
 		$document = new DOMDocument();
 
-		$listXml = wfShellExec( $command );
+		$listXml = Shell::command( $command );
 		if ( !$listXml || !$document->loadXML( $listXml ) ) {
 			// svn list --xml returns invalid XML if the file does not exist
 			// FIXME: report bug upstream
@@ -212,7 +214,10 @@ class SubversionShell extends SubversionAdaptor {
 									$item['last_author'] = $commitEntry->textContent;
 									break;
 								case 'date':
-									$item['time_t'] = wfTimestamp( TS_UNIX, $commitEntry->textContent );
+									$item['time_t'] = wfTimestamp(
+										TimestampFormat::UNIX->value,
+										$commitEntry->textContent
+									);
 									break;
 							}
 						}
@@ -232,8 +237,8 @@ class SubversionShell extends SubversionAdaptor {
 		global $wgSubversionOptions, $wgSubversionUser, $wgSubversionPassword;
 		$args = $wgSubversionOptions;
 		if ( $wgSubversionUser ) {
-			$args .= ' --username ' . wfEscapeShellArg( $wgSubversionUser )
-				. ' --password ' . wfEscapeShellArg( $wgSubversionPassword );
+			$args .= ' --username ' . Shell::escape( $wgSubversionUser )
+				. ' --password ' . Shell::escape( $wgSubversionPassword );
 		}
 		return $args;
 	}
