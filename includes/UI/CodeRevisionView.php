@@ -493,20 +493,26 @@ class CodeRevisionView extends CodeView {
 	 */
 	public static function addTagForm( $addTags, $removeTags ) {
 		return '<div><table><tr><td>' .
-			Xml::inputLabel(
+			Html::label(
 				wfMessage( 'code-rev-tag-add' )->text(),
 				'wpTag',
-				'wpTag',
+			) . "\u{00A0}" .
+			Html::input(
+			'wpTag',
 				20,
-				self::listTags( $addTags )
-			) . '</td><td>&#160;</td><td>' .
-			Xml::inputLabel(
+				self::listTags( $addTags ),
+				[ 'id' => 'wpTag' ]
+			) .
+			Html::label(
 				wfMessage( 'code-rev-tag-remove' )->text(),
 				'wpRemoveTag',
+			) . "\u{00A0}" .
+			Html::input(
 				'wpRemoveTag',
 				20,
-				self::listTags( $removeTags )
-			) . '</td></tr></table></div>';
+				self::listTags( $removeTags ),
+				[ 'id' => 'wpRemoveTag' ]
+			);
 	}
 
 	/**

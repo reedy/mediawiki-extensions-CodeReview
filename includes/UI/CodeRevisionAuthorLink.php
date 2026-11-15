@@ -66,17 +66,27 @@ class CodeRevisionAuthorLink extends CodeRevisionAuthorView {
 			$form .= Xml::element( 'legend', [], wfMessage( 'code-author-alterlink' )->text() );
 			$additional = Xml::openElement( 'fieldset' ) .
 				Xml::element( 'legend', [], wfMessage( 'code-author-orunlink' )->text() ) .
-				Xml::submitButton( wfMessage( 'code-author-unlink' )->text(), [ 'name' => 'unlink' ] ) .
+				Xml::submitButton(
+					wfMessage( 'code-author-unlink' )->text(),
+					[ 'name' => 'unlink' ]
+				) .
 				Xml::closeElement( 'fieldset' );
 		} else {
 			$form .= Xml::element( 'legend', [], wfMessage( 'code-author-dolink' )->text() );
 		}
 
 		$form .= Xml::inputLabel(
-			wfMessage( 'code-author-name' )->text(),
-			'linktouser', 'username', 30, '', [ 'class' => 'mw-autocomplete-user' ]
+				wfMessage( 'code-author-name' )->text(),
+				'linktouser',
+				'username',
+				30,
+				'',
+				[ 'class' => 'mw-autocomplete-user' ]
 			) . ' ' .
-			Xml::submitButton( wfMessage( 'ok' )->text(), [ 'name' => 'newname' ] ) .
+			Xml::submitButton(
+				wfMessage( 'ok' )->text(),
+				[ 'name' => 'newname' ]
+			) .
 			Xml::closeElement( 'fieldset' ) .
 			$additional .
 			Xml::closeElement( 'form' ) . "\n";

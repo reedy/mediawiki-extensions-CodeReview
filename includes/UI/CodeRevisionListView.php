@@ -241,7 +241,10 @@ class CodeRevisionListView extends CodeView {
 
 		$changeInterface = Xml::openElement( 'fieldset' ) . "\n";
 		$changeInterface .= Xml::element( 'legend', null, $pager->msg( 'codereview-batch-title' )->text() ) . "\n";
-		$changeInterface .= Xml::buildForm( $changeFields, 'codereview-batch-submit' ) . "\n";
+		$changeInterface .= Xml::buildForm(
+			$changeFields,
+			'codereview-batch-submit'
+		) . "\n";
 		$changeInterface .= Xml::closeElement( 'fieldset' ) . "\n";
 
 		$changeInterface .= $pager->getHiddenFields();
@@ -296,7 +299,7 @@ class CodeRevisionListView extends CodeView {
 				[ 'dir' => 'ltr' ]
 			) . '&#160;' .
 			Html::label( wfMessage( 'code-pathsearch-filter' )->text(), 'code-status-filter' ) .
-		'&#160;' .
+			'&#160;' .
 			Xml::openElement( 'select', [ 'id' => 'code-status-filter', 'name' => 'title' ] ) .
 			"\n" .
 			implode( "\n", $options ) .
