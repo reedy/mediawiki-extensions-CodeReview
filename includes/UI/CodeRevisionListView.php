@@ -322,7 +322,7 @@ class CodeRevisionListView extends CodeView {
 			$title = SpecialPage::getTitleFor( 'Code', $name . "/status/$state" );
 
 			$attribs = [
-				'value' => $title->getPrefixedText(),
+				'value' => $pager->msg( "code-status-$state" )->text(),
 				'selected' => $this->mStatus == $state
 			];
 
