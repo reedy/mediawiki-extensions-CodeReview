@@ -557,7 +557,9 @@ class CodeRevisionView extends CodeView {
 			return wfMessage( 'code-rev-diff-too-large' )->escaped();
 		} elseif ( is_int( $diff )
 			&& in_array( $diff, [
-				CodeRepository::DIFFRESULT_NOTHINGTOCOMPARE, CodeRepository::DIFFRESULT_TOOMANYPATHS
+				CodeRepository::DIFFRESULT_NOTHINGTOCOMPARE,
+				CodeRepository::DIFFRESULT_TOOMANYPATHS,
+				CodeRepository::DIFFRESULT_TOOBIG,
 			] )
 		) {
 			// Some other error condition, no diff required

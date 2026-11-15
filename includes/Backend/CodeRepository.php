@@ -17,6 +17,9 @@ class CodeRepository {
 	public const DIFFRESULT_TOOMANYPATHS = 2;
 	public const DIFFRESULT_NODATARETURNED = 3;
 	public const DIFFRESULT_NOTINCACHE = 4;
+	public const DIFFRESULT_TOOBIG = 5;
+
+	private const MEDIUMBLOB_SIZE = 16_777_215;
 
 	/**
 	 * Local cache of Wiki user -> SVN user mappings
@@ -457,6 +460,10 @@ class CodeRepository {
 					return self::DIFFRESULT_NODATARETURNED;
 				}
 
+				if ( mb_strlen( $data ) >= self::MEDIUMBLOB_SIZE ) {
+					return self::DIFFRESULT_TOOBIG;
+				}
+
 				// Back-fill the permanent DB storage cache
 				$storedData = $data;
 				$flags = $blobStore->compressData( $storedData );
@@ -671,6 +678,7 @@ class CodeRepository {
 					')',
 				self::DIFFRESULT_NODATARETURNED => 'No data returned - no diff data, or connection lost',
 				self::DIFFRESULT_NOTINCACHE => 'Not in cache',
+				self::DIFFRESULT_TOOBIG => 'Diff too big to be stored in the database',
 				default => 'Unknown reason!',
 			};
 		}
