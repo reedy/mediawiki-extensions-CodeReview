@@ -460,7 +460,7 @@ class CodeRepository {
 					return self::DIFFRESULT_NODATARETURNED;
 				}
 
-				if ( mb_strlen( $data ) >= self::MEDIUMBLOB_SIZE ) {
+				if ( strlen( $data ) >= self::MEDIUMBLOB_SIZE ) {
 					return self::DIFFRESULT_TOOBIG;
 				}
 
