@@ -3,6 +3,7 @@
 namespace MediaWiki\Extension\CodeReview\Backend;
 
 use stdClass;
+use Wikimedia\Timestamp\TimestampFormat;
 
 class CodePropChange {
 
@@ -52,7 +53,7 @@ class CodePropChange {
 		$change->user = $data['cpc_user'];
 		// We'd prefer the up to date user table name
 		$change->userText = $data['user_name'] ?? $data['cpc_user_text'];
-		$change->timestamp = wfTimestamp( TS_MW, $data['cpc_timestamp'] );
+		$change->timestamp = wfTimestamp( TimestampFormat::MW->value, $data['cpc_timestamp'] );
 		return $change;
 	}
 }

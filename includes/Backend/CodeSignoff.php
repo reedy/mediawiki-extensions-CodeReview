@@ -4,6 +4,7 @@ namespace MediaWiki\Extension\CodeReview\Backend;
 
 use MediaWiki\MediaWikiServices;
 use stdClass;
+use Wikimedia\Timestamp\TimestampFormat;
 
 /**
  * Class representing a sign-off. A sign-off in this context is the record of a
@@ -84,7 +85,7 @@ class CodeSignoff {
 	 *   been struck
 	 */
 	public function getTimestampStruck() {
-		return $this->isStruck() ? wfTimestamp( TS_MW, $this->timestampStruck ) : false;
+		return $this->isStruck() ? wfTimestamp( TimestampFormat::MW->value, $this->timestampStruck ) : false;
 	}
 
 	/**
@@ -141,7 +142,7 @@ class CodeSignoff {
 	 */
 	public static function newFromData( $rev, $data ) {
 		return new self( $rev, $data['cs_user'], $data['cs_user_text'], $data['cs_flag'],
-			wfTimestamp( TS_MW, $data['cs_timestamp'] ), $data['cs_timestamp_struck']
+			wfTimestamp( TimestampFormat::MW->value, $data['cs_timestamp'] ), $data['cs_timestamp_struck']
 		);
 	}
 

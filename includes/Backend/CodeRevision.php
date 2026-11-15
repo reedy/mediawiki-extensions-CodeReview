@@ -13,6 +13,7 @@ use MediaWiki\User\User;
 use stdClass;
 use Wikimedia\Rdbms\IDatabase;
 use Wikimedia\Rdbms\IResultWrapper;
+use Wikimedia\Timestamp\TimestampFormat;
 
 class CodeRevision {
 	/**
@@ -54,7 +55,7 @@ class CodeRevision {
 		$rev->repo = $repo;
 		$rev->id = intval( $data['rev'] );
 		$rev->author = $data['author'];
-		$rev->timestamp = wfTimestamp( TS_MW, strtotime( $data['date'] ) );
+		$rev->timestamp = wfTimestamp( TimestampFormat::MW->value, strtotime( $data['date'] ) );
 		$rev->message = rtrim( $data['msg'] );
 		$rev->paths = $data['paths'];
 		$rev->status = 'new';
@@ -165,7 +166,7 @@ class CodeRevision {
 		$rev->repo = $repo;
 		$rev->id = intval( $row->cr_id );
 		$rev->author = $row->cr_author;
-		$rev->timestamp = wfTimestamp( TS_MW, $row->cr_timestamp );
+		$rev->timestamp = wfTimestamp( TimestampFormat::MW->value, $row->cr_timestamp );
 		$rev->message = $row->cr_message;
 		$rev->status = $row->cr_status;
 		$rev->oldStatus = '';
@@ -800,7 +801,7 @@ class CodeRevision {
 		$dbw = MediaWikiServices::getInstance()
 			->getDBLoadBalancer()
 			->getMaintenanceConnectionRef( DB_PRIMARY );
-		$ts = wfTimestamp( TS_MW );
+		$ts = wfTimestamp( TimestampFormat::MW->value );
 
 		return [
 			'cc_repo_id' => $this->repoId,

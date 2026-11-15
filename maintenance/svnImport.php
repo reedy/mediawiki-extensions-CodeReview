@@ -4,6 +4,7 @@ use MediaWiki\Extension\CodeReview\Backend\CodeRepository;
 use MediaWiki\Extension\CodeReview\Backend\CodeRevision;
 use MediaWiki\Extension\CodeReview\Backend\SubversionAdaptor;
 use MediaWiki\MediaWikiServices;
+use Wikimedia\Timestamp\TimestampFormat;
 
 $IP = getenv( 'MW_INSTALL_PATH' );
 if ( $IP === false ) {
@@ -145,7 +146,7 @@ class SvnImport extends Maintenance {
 
 				$this->output( sprintf( "%d %s %s (%0.1f revs/sec)\n",
 					$codeRev->getId(),
-					wfTimestamp( TS_DB, $codeRev->getTimestamp() ),
+					wfTimestamp( TimestampFormat::DB->value, $codeRev->getTimestamp() ),
 					$codeRev->getAuthor(),
 					$revSpeed ) );
 			}

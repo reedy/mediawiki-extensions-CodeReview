@@ -4,6 +4,7 @@ namespace MediaWiki\Extension\CodeReview\Backend;
 
 use MediaWiki\MediaWikiServices;
 use stdClass;
+use Wikimedia\Timestamp\TimestampFormat;
 
 /**
  * Represents a comment made to a revision.
@@ -90,7 +91,7 @@ class CodeComment {
 		$comment->text = $data['cc_text'];
 		$comment->user = $data['cc_user'];
 		$comment->userText = $data['cc_user_text'];
-		$comment->timestamp = wfTimestamp( TS_MW, $data['cc_timestamp'] );
+		$comment->timestamp = wfTimestamp( TimestampFormat::MW->value, $data['cc_timestamp'] );
 		$comment->sortkey = $data['cc_sortkey'];
 		return $comment;
 	}

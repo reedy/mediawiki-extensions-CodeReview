@@ -9,6 +9,7 @@ use MediaWiki\Extension\CodeReview\UI\CodeCommentsListView;
 use stdClass;
 use Wikimedia\ParamValidator\ParamValidator;
 use Wikimedia\ParamValidator\TypeDef\IntegerDef;
+use Wikimedia\Timestamp\TimestampFormat;
 
 /**
  * Created on Oct 29, 2008
@@ -77,7 +78,7 @@ class ApiQueryCodeComments extends ApiQueryBase {
 		foreach ( $comments as $row ) {
 			if ( $count == $limit ) {
 				$this->setContinueEnumParameter( 'start',
-					wfTimestamp( TS_ISO_8601, $lastTimestamp ) );
+					wfTimestamp( TimestampFormat::ISO_8601->value, $lastTimestamp ) );
 				break;
 			}
 
@@ -94,7 +95,7 @@ class ApiQueryCodeComments extends ApiQueryBase {
 
 	/**
 	 * @param stdClass $row
-	 * @return string
+	 * @return array
 	 */
 	private function formatRow( $row ) {
 		$item = [];
@@ -102,7 +103,7 @@ class ApiQueryCodeComments extends ApiQueryBase {
 			$item['revid'] = $row->cc_rev_id;
 		}
 		if ( isset( $this->props['timestamp'] ) ) {
-			$item['timestamp'] = wfTimestamp( TS_ISO_8601, $row->cc_timestamp );
+			$item['timestamp'] = wfTimestamp( TimestampFormat::ISO_8601->value, $row->cc_timestamp );
 		}
 		if ( isset( $this->props['user'] ) ) {
 			$item['user'] = $row->cc_user_text;

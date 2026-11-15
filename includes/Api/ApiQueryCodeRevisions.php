@@ -11,6 +11,7 @@ use MediaWiki\Extension\CodeReview\UI\CodeRevisionListView;
 use stdClass;
 use Wikimedia\ParamValidator\ParamValidator;
 use Wikimedia\ParamValidator\TypeDef\IntegerDef;
+use Wikimedia\Timestamp\TimestampFormat;
 
 /**
  * Created on July 06, 2010
@@ -142,7 +143,7 @@ class ApiQueryCodeRevisions extends ApiQueryBase {
 			$item['author'] = $row->cr_author;
 		}
 		if ( isset( $this->props['timestamp'] ) ) {
-			$item['timestamp'] = wfTimestamp( TS_ISO_8601, $row->cr_timestamp );
+			$item['timestamp'] = wfTimestamp( TimestampFormat::ISO_8601->value, $row->cr_timestamp );
 		}
 		$rev = null;
 		if ( isset( $this->props['tags'] ) ) {
@@ -178,7 +179,7 @@ class ApiQueryCodeRevisions extends ApiQueryBase {
 			$refItem = [
 				'revid' => $ref->cr_id,
 				'status' => $ref->cr_status,
-				'timestamp' => wfTimestamp( TS_ISO_8601, $ref->cr_timestamp ),
+				'timestamp' => wfTimestamp( TimestampFormat::ISO_8601->value, $ref->cr_timestamp ),
 				'author' => $ref->cr_author,
 			];
 			ApiResult::setContentValue( $refItem, 'message', $ref->cr_message );

@@ -8,6 +8,7 @@ use MediaWiki\Extension\CodeReview\Backend\CodeRevision;
 use MediaWiki\Extension\CodeReview\Backend\SubversionAdaptor;
 use Wikimedia\ParamValidator\ParamValidator;
 use Wikimedia\ParamValidator\TypeDef\NumericDef;
+use Wikimedia\Timestamp\TimestampFormat;
 
 /**
  *
@@ -65,7 +66,7 @@ class ApiCodeUpdate extends ApiBase {
 			$result[] = [
 				'id' => $codeRev->getId(),
 				'author' => $codeRev->getAuthor(),
-				'timestamp' => wfTimestamp( TS_ISO_8601, $codeRev->getTimestamp() ),
+				'timestamp' => wfTimestamp( TimestampFormat::ISO_8601->value, $codeRev->getTimestamp() ),
 				'message' => $codeRev->getMessage()
 			];
 			$revs[] = $codeRev;

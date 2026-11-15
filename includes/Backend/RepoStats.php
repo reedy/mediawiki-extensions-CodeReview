@@ -3,6 +3,7 @@
 namespace MediaWiki\Extension\CodeReview\Backend;
 
 use MediaWiki\MediaWikiServices;
+use Wikimedia\Timestamp\TimestampFormat;
 
 class RepoStats {
 
@@ -77,7 +78,7 @@ class RepoStats {
 	 */
 	public function __construct( CodeRepository $repo ) {
 		$this->repo = $repo;
-		$this->time = wfTimestamp( TS_MW );
+		$this->time = wfTimestamp( TimestampFormat::MW->value );
 	}
 
 	private function generate() {
