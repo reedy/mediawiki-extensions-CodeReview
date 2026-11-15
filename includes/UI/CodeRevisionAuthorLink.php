@@ -91,11 +91,11 @@ class CodeRevisionAuthorLink extends CodeRevisionAuthorView {
 			) . "\u{00A0}" .
 			Html::input(
 				'linktouser',
-				30,
 				'',
 				[
 					'id' => 'username',
 					'class' => 'mw-autocomplete-user',
+					'size' => 30,
 				]
 			) . ' ' .
 			Html::element(
