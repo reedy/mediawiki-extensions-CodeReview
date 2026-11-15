@@ -290,13 +290,20 @@ class CodeRevisionListView extends CodeView {
 			wfMessage( 'code-pathsearch-legend' )->escaped() . '</legend>' .
 			'<table width="100%"><tr><td>' .
 			Xml::openElement( 'form', [ 'action' => $wgScript, 'method' => 'get' ] ) .
-			Xml::inputLabel(
+			Html::label(
 				wfMessage( "code-pathsearch-path" )->text(),
 				'path',
+				[ 'dir' => 'ltr' ]
+			) . "\u{00A0}" .
+			Html::input(
 				'path',
 				55,
 				$this->getPathsAsString(),
-				[ 'dir' => 'ltr' ]
+				[
+					'id' => 'path',
+					'dir' => 'ltr',
+				]
+
 			) . '&#160;' .
 			Html::label( wfMessage( 'code-pathsearch-filter' )->text(), 'code-status-filter' ) .
 			'&#160;' .
