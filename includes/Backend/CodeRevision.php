@@ -943,7 +943,8 @@ class CodeRevision {
 		);
 		$users = [];
 		foreach ( $result as $row ) {
-			$users[$row->cpc_user] = User::newFromId( $row->cpc_user );
+			$users[$row->cpc_user] = MediaWikiServices::getInstance()->getUserFactory()
+				->newFromId( $row->cpc_user );
 		}
 		return $users;
 	}
@@ -977,7 +978,8 @@ class CodeRevision {
 		);
 		$users = [];
 		foreach ( $res as $row ) {
-			$users[$row->cc_user] = User::newFromId( $row->cc_user );
+			$users[$row->cc_user] = MediaWikiServices::getInstance()->getUserFactory()
+				->newFromId( $row->cc_user );
 		}
 		return $users;
 	}

@@ -617,7 +617,8 @@ class CodeRepository {
 		);
 		$user = null;
 		if ( $wikiUser !== false ) {
-			$user = User::newFromName( $wikiUser );
+			$user = MediaWikiServices::getInstance()->getUserFactory()
+				->newFromName( $wikiUser );
 		}
 		if ( $user instanceof User ) {
 			self::$userLinks[$author] = $user;

@@ -2,6 +2,7 @@
 
 use MediaWiki\Extension\CodeReview\Backend\CodeRepository;
 use MediaWiki\Extension\CodeReview\Backend\CodeRevision;
+use MediaWiki\MediaWikiServices;
 
 $IP = getenv( 'MW_INSTALL_PATH' );
 if ( $IP === false ) {
@@ -55,7 +56,8 @@ class BulkStatusUpdate extends Maintenance {
 		}
 
 		$username = $this->getArg( 3 );
-		$user = User::newFromName( $username );
+		$user = MediaWikiServices::getInstance()->getUserFactory()
+			->newFromName( $username );
 
 		if ( !$user ) {
 			$this->fatalError( "'{$username}' is not a valid username" );
