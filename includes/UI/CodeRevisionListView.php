@@ -241,7 +241,8 @@ class CodeRevisionListView extends CodeView {
 
 		$changeInterface = Xml::openElement( 'fieldset' ) . "\n";
 		$changeInterface .= Xml::element( 'legend', null, $pager->msg( 'codereview-batch-title' )->text() ) . "\n";
-		$changeInterface .= Xml::buildForm(
+		// TODO: use OOUI or Codex widgets instead
+		$changeInterface .= $this->buildForm(
 			$changeFields,
 			'codereview-batch-submit'
 		) . "\n";
@@ -251,6 +252,45 @@ class CodeRevisionListView extends CodeView {
 		$changeInterface .= Html::hidden( 'wpBatchChangeEditToken', $user->getEditToken() );
 
 		return $changeInterface;
+	}
+
+	/**
+	 * Stolen from https://github.com/wikimedia/mediawiki/blob/aaa8af1/includes/Xml/Xml.php#L417 REL1_46
+	 */
+	private function buildForm( $fields, $submitLabel = null, $submitAttribs = [] ): string {
+		$form = "<table><tbody>";
+
+		foreach ( $fields as $labelmsg => $input ) {
+			$id = "mw-$labelmsg";
+			$form .= Xml::openElement( 'tr', [ 'id' => $id ] );
+
+			// TODO use a <label> here for accessibility purposes - will need
+			// to either not use a table to build the form, or find the ID of
+			// the input somehow.
+
+			$form .= Xml::tags( 'td', [ 'class' => 'mw-label' ], wfMessage( $labelmsg )->parse() );
+			$form .= Xml::tags( 'td', [ 'class' => 'mw-input' ], $input );
+			$form .= Xml::closeElement( 'tr' );
+		}
+
+		if ( $submitLabel ) {
+			$form .= Xml::openElement( 'tr' );
+			$form .= Xml::tags( 'td', [], '' );
+			$form .= Xml::openElement( 'td', [ 'class' => 'mw-submit' ] )
+				. Html::element(
+					'input',
+					$submitAttribs + [
+						'type' => 'submit',
+						'value' => wfMessage( $submitLabel )->text(),
+					]
+				)
+				. Xml::closeElement( 'td' );
+			$form .= Xml::closeElement( 'tr' );
+		}
+
+		$form .= "</tbody></table>";
+
+		return $form;
 	}
 
 	/**
