@@ -313,7 +313,7 @@ class CodeRevisionListView extends CodeView {
 			'value' => $title->getPrefixedText(),
 			'selected' => $this->mStatus == '',
 		];
-		$options = [ Html::element( 'option', $attribs, $title->getPrefixedText() ) ];
+		$options = [ Html::element( 'option', $attribs, '' ) ];
 
 		// Give grep a chance to find the usages:
 		// code-status-new, code-status-fixme, code-status-reverted, code-status-resolved,
@@ -322,11 +322,11 @@ class CodeRevisionListView extends CodeView {
 			$title = SpecialPage::getTitleFor( 'Code', $name . "/status/$state" );
 
 			$attribs = [
-				'value' => $pager->msg( "code-status-$state" )->text(),
-				'selected' => $this->mStatus == $state
+				'value' => $title->getPrefixedText(),
+				'selected' => $this->mStatus == $state,
 			];
 
-			$options[] = Html::element( 'option', $attribs, $title->getPrefixedText() );
+			$options[] = Html::element( 'option', $attribs, $pager->msg( "code-status-$state" )->text() );
 		}
 
 		return '<fieldset><legend>' .
