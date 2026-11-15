@@ -59,7 +59,7 @@ abstract class SvnTablePager extends TablePager {
 		$this->mCurrentRow = $row;
 		foreach ( $fieldNames as $field => $name ) {
 			$value = $row->$field ?? null;
-			$formatted = strval( $this->formatRevValue( $field, $value, $row ) );
+			$formatted = $this->formatRevValue( $field, $value, $row );
 			if ( $formatted == '' ) {
 				$formatted = '&#160;';
 			}

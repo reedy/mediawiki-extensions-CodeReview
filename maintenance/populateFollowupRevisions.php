@@ -35,7 +35,7 @@ class PopulateFollowupRevisions extends Maintenance {
 		}
 
 		$revisions = $this->getArg( 1 );
-		if ( strpos( $revisions, ':' ) !== false ) {
+		if ( str_contains( $revisions, ':' ) ) {
 			$revisionVals = explode( ':', $revisions, 2 );
 		} else {
 			$this->fatalError( "Invalid revision range" );

@@ -64,9 +64,7 @@ class CodeRevisionView extends CodeView {
 			$this->mRev = $rev;
 		} else {
 			$this->mRevId = intval( ltrim( $rev, 'r' ) );
-			$this->mRev = $this->mRepo
-				? $this->mRepo->getRevision( $this->mRevId )
-				: null;
+			$this->mRev = $this->mRepo?->getRevision( $this->mRevId );
 		}
 
 		$this->mPreviewText = false;

@@ -101,7 +101,7 @@ abstract class CodeView {
 			// If multiline, we might want to add an ellipse
 			$ellipsis = wfMessage( 'ellipsis' )->text();
 			// Hack: don't add if the end is already an ellipse
-			if ( substr( $truncated, -strlen( $ellipsis ) ) !== $ellipsis ) {
+			if ( !str_ends_with( $truncated, $ellipsis ) ) {
 				$truncated .= $ellipsis;
 			}
 		}

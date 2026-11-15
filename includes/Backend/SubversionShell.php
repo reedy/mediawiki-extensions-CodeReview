@@ -31,7 +31,7 @@ class SubversionShell extends SubversionAdaptor {
 		$result = wfShellExec( $command );
 		if ( $result == '' ) {
 			return false;
-		} elseif ( strpos( $result, 'No repository found' ) !== false ) {
+		} elseif ( str_contains( $result, 'No repository found' ) ) {
 			return false;
 		} else {
 			return true;

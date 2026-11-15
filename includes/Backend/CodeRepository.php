@@ -662,21 +662,16 @@ class CodeRepository {
 		global $wgCodeReviewMaxDiffPaths;
 
 		if ( is_int( $diff ) ) {
-			switch ( $diff ) {
-				case self::DIFFRESULT_BADREVISION:
-					return 'Bad revision';
-				case self::DIFFRESULT_NOTHINGTOCOMPARE:
-					return 'Nothing to compare';
-				case self::DIFFRESULT_TOOMANYPATHS:
-					return 'Too many paths ($wgCodeReviewMaxDiffPaths = '
-						. $wgCodeReviewMaxDiffPaths . ')';
-				case self::DIFFRESULT_NODATARETURNED:
-					return 'No data returned - no diff data, or connection lost';
-				case self::DIFFRESULT_NOTINCACHE:
-					return 'Not in cache';
-				default:
-					return 'Unknown reason!';
-			}
+			return match ( $diff ) {
+				self::DIFFRESULT_BADREVISION => 'Bad revision',
+				self::DIFFRESULT_NOTHINGTOCOMPARE => 'Nothing to compare',
+				self::DIFFRESULT_TOOMANYPATHS => 'Too many paths ($wgCodeReviewMaxDiffPaths = ' .
+					$wgCodeReviewMaxDiffPaths .
+					')',
+				self::DIFFRESULT_NODATARETURNED => 'No data returned - no diff data, or connection lost',
+				self::DIFFRESULT_NOTINCACHE => 'Not in cache',
+				default => 'Unknown reason!',
+			};
 		}
 
 		// TODO: Should this return "", $diff or a message string, e.g. "OK"?

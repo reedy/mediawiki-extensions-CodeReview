@@ -149,7 +149,7 @@ class CodeReleaseNotes extends CodeView {
 		if ( preg_match( '/(^|\n) ?\*/', $summary ) ) {
 			$blurbs = explode( '*', $summary );
 		# Double newlines separate importance generally
-		} elseif ( strpos( $summary, "\n\n" ) !== false ) {
+		} elseif ( str_contains( $summary, "\n\n" ) ) {
 			$blurbs = explode( "\n\n", $summary );
 		} else {
 			return trim( $summary );
@@ -162,7 +162,7 @@ class CodeReleaseNotes extends CodeView {
 		# Doesn't start with '*' and has some length?
 		# If so, then assume that the top bit is important.
 		if ( count( $blurbs ) ) {
-			$header = strpos( ltrim( $summary ), '*' ) !== 0 && str_word_count( $blurbs[0] ) >= 5;
+			$header = !str_starts_with( ltrim( $summary ), '*' ) && str_word_count( $blurbs[0] ) >= 5;
 		} else {
 			$header = false;
 		}

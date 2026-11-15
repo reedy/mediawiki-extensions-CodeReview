@@ -62,13 +62,13 @@ class CodeDiffHighlighter {
 		# Dispatch diff lines to the proper handler
 		switch ( substr( $line, 0, 1 ) ) {
 			case '-':
-				if ( substr( $line, 0, 3 ) === '---' ) {
+				if ( str_starts_with( $line, '---' ) ) {
 					return '';
 				}
 				$r = $this->handleLineDeletion( $line );
 				break;
 			case '+':
-				if ( substr( $line, 0, 3 ) === '+++' ) {
+				if ( str_starts_with( $line, '+++' ) ) {
 					return '';
 				}
 				$r = $this->handleLineAddition( $line );
@@ -237,11 +237,8 @@ class CodeDiffHighlighter {
 			' ' => [ 'td', [] ],
 		];
 		$first = substr( $line, 0, 1 );
-		if ( isset( $tags[$first] ) ) {
-			return $tags[$first];
-		} else {
-			return $default;
-		}
+
+		return $tags[$first] ?? $default;
 	}
 
 	/**
