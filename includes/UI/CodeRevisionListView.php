@@ -340,22 +340,30 @@ class CodeRevisionListView extends CodeView {
 			) . "\u{00A0}" .
 			Html::input(
 				'path',
-				55,
 				$this->getPathsAsString(),
+				'text',
 				[
 					'id' => 'path',
 					'dir' => 'ltr',
+					'size' => 55,
 				]
 
 			) . '&#160;' .
-			Html::label( wfMessage( 'code-pathsearch-filter' )->text(), 'code-status-filter' ) .
+			Html::label(
+				wfMessage( 'code-pathsearch-filter' )->text(),
+				'code-status-filter'
+			) .
 			'&#160;' .
-			Xml::openElement( 'select', [ 'id' => 'code-status-filter', 'name' => 'title' ] ) .
+			Xml::openElement(
+				'select',
+				[ 'id' => 'code-status-filter', 'name' => 'title' ]
+			) .
 			"\n" .
 			implode( "\n", $options ) .
 			"\n" .
 			Xml::closeElement( 'select' ) .
-			'&#160;' . Html::submitButton( wfMessage( 'allpagessubmit' )->text() ) .
+			'&#160;' .
+			Html::submitButton( wfMessage( 'allpagessubmit' )->text() ) .
 			$pager->getHiddenFields( [ 'path', 'title' ] ) .
 			Xml::closeElement( 'form' ) .
 			'</td></tr></table></fieldset>';
