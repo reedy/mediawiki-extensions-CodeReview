@@ -30,7 +30,7 @@ class SubversionShell extends SubversionAdaptor {
 			Shell::escape( $this->mRepoPath )
 		);
 
-		$result = Shell::command( $command );
+		$result = Shell::command( $command )->execute()->getStdout();
 		if ( $result == '' ) {
 			return false;
 		} elseif ( str_contains( $result, 'No repository found' ) ) {
@@ -51,7 +51,7 @@ class SubversionShell extends SubversionAdaptor {
 			Shell::escape( $this->mRepoPath . $path )
 		);
 
-		return Shell::command( $command );
+		return Shell::command( $command )->execute()->getStdout();
 	}
 
 	/** @inheritDoc */
@@ -64,7 +64,7 @@ class SubversionShell extends SubversionAdaptor {
 			Shell::escape( $this->mRepoPath . $path )
 		);
 
-		return Shell::command( $command );
+		return Shell::command( $command )->execute()->getStdout();
 	}
 
 	/** @inheritDoc */
@@ -78,7 +78,7 @@ class SubversionShell extends SubversionAdaptor {
 			Shell::escape( $this->mRepoPath . $path )
 		);
 
-		$lines = explode( "\n", Shell::command( $command ) );
+		$lines = explode( "\n", Shell::command( $command )->execute()->getStdout() );
 		$out = [];
 
 		$divider = str_repeat( '-', 72 );
@@ -186,7 +186,7 @@ class SubversionShell extends SubversionAdaptor {
 		);
 		$document = new DOMDocument();
 
-		$listXml = Shell::command( $command );
+		$listXml = Shell::command( $command )->execute()->getStdout();
 		if ( !$listXml || !$document->loadXML( $listXml ) ) {
 			// svn list --xml returns invalid XML if the file does not exist
 			// FIXME: report bug upstream
