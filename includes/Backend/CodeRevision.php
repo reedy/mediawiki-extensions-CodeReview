@@ -42,7 +42,7 @@ class CodeRevision {
 
 	protected string $oldStatus;
 
-	protected string $commonPath;
+	protected ?string $commonPath;
 
 	/**
 	 * @param CodeRepository $repo
