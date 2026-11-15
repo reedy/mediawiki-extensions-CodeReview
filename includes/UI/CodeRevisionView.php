@@ -378,27 +378,36 @@ class CodeRevisionView extends CodeView {
 		if ( $viewvc ) {
 			$rev = $this->mRev->getId();
 			$prev = $rev - 1;
+
+			global $wgTitle;
+			$linkRenderer = MediaWikiServices::getInstance()->getLinkRenderer();
+
 			if ( $action === 'd' ) {
 				if ( $rev > 1 ) {
-					$link = Linker::makeExternalLink(
+					$link = $linkRenderer->makeExternalLink(
 						// last rev
 						"{$viewvc}{$safePath}?view=markup&pathrev=" . ( $rev - 1 ),
-						$path . $from );
+						$path . $from,
+						$wgTitle
+					);
 				} else {
 					// imported to SVN or something
 					$link = $safePath;
 				}
 			} else {
-				$link = Linker::makeExternalLink(
+				$link = $linkRenderer->makeExternalLink(
 					"{$viewvc}{$safePath}?view=markup&pathrev=$rev",
-					$path . $from );
+					$path . $from,
+					$wgTitle
+				);
 			}
 			if ( $action !== 'a' && $action !== 'd' ) {
 				$diff = ' (' .
-					Linker::makeExternalLink(
+					$linkRenderer->makeExternalLink(
 						"$viewvc$safePath?&pathrev=$rev&r1=$prev&r2=$rev",
-						wfMessage( 'code-rev-diff-link' )->text() ) .
-					')';
+						wfMessage( 'code-rev-diff-link' )->text(),
+						$wgTitle
+					) . ')';
 			}
 		} else {
 			$link = $safePath;

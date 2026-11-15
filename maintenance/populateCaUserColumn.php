@@ -66,7 +66,7 @@ class PopulateCaUserColumn extends Maintenance {
 		$this->output( "{$numRows} authors with ca_user = 0 in the table...\n" );
 
 		$dbw = $this->getDB( DB_PRIMARY );
-		$this->beginTransaction( $dbw, __METHOD__ );
+		$this->beginTransactionRound( $dbw, __METHOD__ );
 		$userIdentityLookup = MediaWikiServices::getInstance()->getUserIdentityLookup();
 
 		foreach ( $res as $row ) {
@@ -91,7 +91,7 @@ class PopulateCaUserColumn extends Maintenance {
 			);
 		}
 
-		$this->commitTransaction( $dbw, __METHOD__ );
+		$this->commitTransactionRound( $dbw, __METHOD__ );
 
 		$this->output( "Done!\n" );
 	}

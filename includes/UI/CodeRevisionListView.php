@@ -107,7 +107,7 @@ class CodeRevisionListView extends CodeView {
 		$editToken = $wgRequest->getVal( 'wpBatchChangeEditToken' );
 		$revisions = $wgRequest->getArray( 'wpRevisionSelected' );
 		if ( $wgRequest->wasPosted() && count( $revisions )
-			&& $user->matchEditToken( $editToken )
+			&& RequestContext::getMain()->getCsrfTokenSet()->matchToken( $editToken )
 		) {
 			$this->doBatchChange( $output, $user );
 			return;
@@ -249,7 +249,10 @@ class CodeRevisionListView extends CodeView {
 		$changeInterface .= Xml::closeElement( 'fieldset' ) . "\n";
 
 		$changeInterface .= $pager->getHiddenFields();
-		$changeInterface .= Html::hidden( 'wpBatchChangeEditToken', $user->getEditToken() );
+		$changeInterface .= Html::hidden(
+			'wpBatchChangeEditToken',
+			RequestContext::getMain()->getCsrfTokenSet()->getToken()
+		);
 
 		return $changeInterface;
 	}

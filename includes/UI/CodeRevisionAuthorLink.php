@@ -2,10 +2,12 @@
 
 namespace MediaWiki\Extension\CodeReview\UI;
 
+use MediaWiki\Context\RequestContext;
 use MediaWiki\Exception\PermissionsError;
 use MediaWiki\Extension\CodeReview\Backend\CodeRepository;
 use MediaWiki\Html\Html;
 use MediaWiki\Linker\Linker;
+use MediaWiki\MediaWikiServices;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\User\User;
 use MediaWiki\Xml\Xml;
@@ -57,7 +59,10 @@ class CodeRevisionAuthorLink extends CodeRevisionAuthorView {
 			'action' => $this->getTitle()->getLocalURL(),
 			'name' => 'uluser', 'id' => 'mw-codeauthor-form1' ] );
 
-		$form .= Html::hidden( 'linktoken', $this->mUser->getEditToken( 'link' ) );
+		$form .= Html::hidden(
+			'linktoken',
+			RequestContext::getMain()->getCsrfTokenSet()->getToken( 'link' )
+		);
 		$form .= Xml::openElement( 'fieldset' );
 
 		$additional = '';
@@ -112,13 +117,13 @@ class CodeRevisionAuthorLink extends CodeRevisionAuthorView {
 	private function doSubmit() {
 		global $wgOut, $wgRequest;
 		// Link an author to a wiki user
-		if ( !$this->mUser->matchEditToken( $wgRequest->getVal( 'linktoken' ), 'link' ) ) {
+		if ( !RequestContext::getMain()->getCsrfTokenSet()->getToken( $wgRequest->getVal( 'linktoken' ), 'link' ) ) {
 			$wgOut->addWikiMsg( 'code-author-badtoken' );
 			return;
 		}
 
 		if ( strlen( $this->mTarget ) && $wgRequest->getCheck( 'newname' ) ) {
-			$user = User::newFromName( $this->mTarget, false );
+			$user = MediaWikiServices::getInstance()->getUserFactory()->newFromName( $this->mTarget, false );
 			if ( !$user || !$user->getId() ) {
 				$wgOut->addWikiMsg( 'nosuchusershort', $this->mTarget );
 				return;

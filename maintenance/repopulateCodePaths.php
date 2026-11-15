@@ -53,7 +53,7 @@ class RepopulateCodePaths extends Maintenance {
 		);
 
 		$dbw = $this->getDB( DB_PRIMARY );
-		$this->beginTransaction( $dbw, __METHOD__ );
+		$this->beginTransactionRound( $dbw, __METHOD__ );
 
 		foreach ( $res as $row ) {
 			$fragments = CodeRevision::getPathFragments(
@@ -66,7 +66,7 @@ class RepopulateCodePaths extends Maintenance {
 				count( $fragments ) . "\n" );
 		}
 
-		$this->commitTransaction( $dbw, __METHOD__ );
+		$this->commitTransactionRound( $dbw, __METHOD__ );
 
 		$this->output( "Done!\n" );
 	}

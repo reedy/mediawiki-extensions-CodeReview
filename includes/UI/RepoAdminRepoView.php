@@ -3,6 +3,7 @@
 namespace MediaWiki\Extension\CodeReview\UI;
 
 use HTMLForm;
+use MediaWiki\Context\RequestContext;
 use MediaWiki\Extension\CodeReview\Backend\CodeRepository;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Title\Title;
@@ -56,7 +57,7 @@ class RepoAdminRepoView {
 		$viewPath = $wgRequest->getVal( 'wpViewPath',
 			$repoExists ? $this->repo->getViewVcBase() : '' );
 		if ( $wgRequest->wasPosted()
-			&& $this->user->matchEditToken( $wgRequest->getVal( 'wpEditToken' ), $this->repoName )
+			&& RequestContext::getMain()->getCsrfTokenSet()->matchToken( $wgRequest->getVal( 'wpEditToken' ), $this->repoName )
 		) {
 			// @todo log
 			$dbw = MediaWikiServices::getInstance()

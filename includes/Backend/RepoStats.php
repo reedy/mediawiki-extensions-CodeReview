@@ -47,7 +47,7 @@ class RepoStats {
 	public static function newFromRepo( CodeRepository $repo ) {
 		global $wgCodeReviewRepoStatsCacheTime;
 
-		$cache = MediaWikiServices::getInstance()->getMainWANObjectCache();
+		$cache = MediaWikiServices::getInstance()->getWANObjectCache();
 
 		$data = $cache->getWithSetCallback(
 			$cache->makeKey( 'codereview-stats', $repo->getName() ),

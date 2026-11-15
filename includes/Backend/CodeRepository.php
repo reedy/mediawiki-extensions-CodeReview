@@ -208,7 +208,7 @@ class CodeRepository {
 	 * @return array
 	 */
 	public function getAuthorList() {
-		$cache = MediaWikiServices::getInstance()->getMainWANObjectCache();
+		$cache = MediaWikiServices::getInstance()->getWANObjectCache();
 		$method = __METHOD__;
 
 		return $cache->getWithSetCallback(
@@ -258,7 +258,7 @@ class CodeRepository {
 	 * @return array
 	 */
 	public function getTagList( $recache = false ) {
-		$cache = MediaWikiServices::getInstance()->getMainWANObjectCache();
+		$cache = MediaWikiServices::getInstance()->getWANObjectCache();
 		$method = __METHOD__;
 
 		return $cache->getWithSetCallback(
@@ -393,7 +393,7 @@ class CodeRepository {
 		$rev2 = $rev;
 
 		$services = MediaWikiServices::getInstance();
-		$cache = $services->getMainWANObjectCache();
+		$cache = $services->getWANObjectCache();
 		/** @var SqlBlobStore $blobStore */
 		$blobStore = $services->getBlobStore();
 		$method = __METHOD__;
@@ -487,7 +487,7 @@ class CodeRepository {
 		$rev2 = $codeRev->getId();
 
 		$services = MediaWikiServices::getInstance();
-		$cache = $services->getMainWANObjectCache();
+		$cache = $services->getWANObjectCache();
 		$data = $cache->getWithSetCallback(
 			$cache->makeKey( 'svn-diff', md5( $this->path ), $rev1, $rev2 ),
 			3 * $cache::TTL_DAY,

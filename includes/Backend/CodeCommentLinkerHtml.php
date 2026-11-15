@@ -14,7 +14,12 @@ class CodeCommentLinkerHtml extends CodeCommentLinker {
 	 * @return string
 	 */
 	public function makeExternalLink( $url, $text ) {
-		return Linker::makeExternalLink( $url, $text );
+		global $wgTitle;
+		return MediaWikiServices::getInstance()->getLinkRenderer()->makeExternalLink(
+			$url,
+			$text,
+			$wgTitle
+		);
 	}
 
 	/**
