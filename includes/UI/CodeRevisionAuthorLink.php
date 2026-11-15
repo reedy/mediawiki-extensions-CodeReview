@@ -8,6 +8,7 @@ use MediaWiki\Html\Html;
 use MediaWiki\Linker\Linker;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\User\User;
+use MediaWiki\Xml\Xml;
 
 /**
  * Special:Code/MediaWiki/author/johndoe/link
