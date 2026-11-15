@@ -4,6 +4,7 @@ namespace MediaWiki\Extension\CodeReview\Backend;
 
 use DOMDocument;
 use Exception;
+use MediaWiki\Exception\ProcOpenError;
 use MediaWiki\Shell\Shell;
 use Wikimedia\Timestamp\TimestampFormat;
 
@@ -23,6 +24,30 @@ class SubversionShell extends SubversionAdaptor {
 		}
 	}
 
+	private function shellExec( string $cmd, &$retval = null ) {
+		if ( Shell::isDisabled() ) {
+			$retval = 1;
+			// Backwards compatibility be upon us...
+			return 'Unable to run external programs, proc_open() is disabled.';
+		}
+
+		try {
+			$result = Shell::command( [] )
+				->unsafeParams( (array)$cmd )
+				->includeStderr( false )
+				->profileMethod( wfGetCaller() )
+				// For b/c
+				->restrict( Shell::RESTRICT_NONE )
+				->execute();
+		} catch ( ProcOpenError ) {
+			$retval = -1;
+			return '';
+		}
+
+		$retval = $result->getExitCode();
+		return $result->getStdout();
+	}
+
 	public function canConnect() {
 		$command = sprintf(
 			'svn info %s %s',
@@ -30,7 +55,7 @@ class SubversionShell extends SubversionAdaptor {
 			Shell::escape( $this->mRepoPath )
 		);
 
-		$result = Shell::command( $command )->execute()->getStdout();
+		$result = $this->shellExec( $command );
 		if ( $result == '' ) {
 			return false;
 		} elseif ( str_contains( $result, 'No repository found' ) ) {
@@ -51,7 +76,7 @@ class SubversionShell extends SubversionAdaptor {
 			Shell::escape( $this->mRepoPath . $path )
 		);
 
-		return Shell::command( $command )->execute()->getStdout();
+		return $this->shellExec( $command );
 	}
 
 	/** @inheritDoc */
@@ -64,7 +89,7 @@ class SubversionShell extends SubversionAdaptor {
 			Shell::escape( $this->mRepoPath . $path )
 		);
 
-		return Shell::command( $command )->execute()->getStdout();
+		return $this->shellExec( $command );
 	}
 
 	/** @inheritDoc */
@@ -78,7 +103,7 @@ class SubversionShell extends SubversionAdaptor {
 			Shell::escape( $this->mRepoPath . $path )
 		);
 
-		$lines = explode( "\n", Shell::command( $command )->execute()->getStdout() );
+		$lines = explode( "\n", $this->shellExec( $command ));
 		$out = [];
 
 		$divider = str_repeat( '-', 72 );
@@ -186,7 +211,7 @@ class SubversionShell extends SubversionAdaptor {
 		);
 		$document = new DOMDocument();
 
-		$listXml = Shell::command( $command )->execute()->getStdout();
+		$listXml = $this->shellExec( $command );
 		if ( !$listXml || !$document->loadXML( $listXml ) ) {
 			// svn list --xml returns invalid XML if the file does not exist
 			// FIXME: report bug upstream
