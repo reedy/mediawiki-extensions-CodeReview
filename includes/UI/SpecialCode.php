@@ -10,7 +10,12 @@ use SpecialPage;
  */
 class SpecialCode extends SpecialPage {
 	public function __construct() {
-		parent::__construct( 'Code', 'codereview-use' );
+		parent::__construct( 'Code' );
+	}
+
+	/** @inheritDoc */
+	public function getRestriction(): string {
+		return 'codereview-use';
 	}
 
 	/**

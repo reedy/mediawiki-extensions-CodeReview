@@ -10,7 +10,12 @@ use SpecialPage;
  */
 class SpecialRepoAdmin extends SpecialPage {
 	public function __construct() {
-		parent::__construct( 'RepoAdmin', 'repoadmin' );
+		parent::__construct( 'RepoAdmin' );
+	}
+
+	/** @inheritDoc */
+	public function getRestriction(): string {
+		return 'repoadmin';
 	}
 
 	public function doesWrites() {
