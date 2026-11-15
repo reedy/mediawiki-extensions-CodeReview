@@ -204,7 +204,7 @@ class CodeRevisionListView extends CodeView {
 		// This way of getting GET parameters is horrible, but effective.
 		$fields = $wgRequest->getValues();
 		foreach ( array_keys( $fields ) as $key ) {
-			if ( substr( $key, 0, 2 ) == 'wp' || $key == 'title' ) {
+			if ( str_starts_with( $key, 'wp' ) || $key == 'title' ) {
 				unset( $fields[$key] );
 			}
 		}
