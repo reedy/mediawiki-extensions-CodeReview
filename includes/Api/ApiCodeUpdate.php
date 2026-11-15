@@ -2,7 +2,7 @@
 
 namespace MediaWiki\Extension\CodeReview\Api;
 
-use ApiBase;
+use MediaWiki\Api\ApiBase;
 use MediaWiki\Extension\CodeReview\Backend\CodeRepository;
 use MediaWiki\Extension\CodeReview\Backend\CodeRevision;
 use MediaWiki\Extension\CodeReview\Backend\SubversionAdaptor;

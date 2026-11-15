@@ -3,7 +3,7 @@
 namespace MediaWiki\Extension\CodeReview\UI;
 
 use MediaWiki\Extension\CodeReview\Backend\CodeRepository;
-use SpecialPage;
+use MediaWiki\SpecialPage\SpecialPage;
 
 /**
  * Repository administration
@@ -41,14 +41,14 @@ class SpecialRepoAdmin extends SpecialPage {
 	}
 
 	/**
-	 * @param string $subpage
+	 * @param string $subPage
 	 */
-	public function execute( $subpage ) {
+	public function execute( $subPage ) {
 		$this->setHeaders();
 
 		$this->checkPermissions();
 
-		$repo = $this->getRequest()->getVal( 'repo', $subpage );
+		$repo = $this->getRequest()->getVal( 'repo', $subPage );
 		if ( $repo == '' ) {
 			$view = new RepoAdminListView( $this->getPageTitle() );
 		} else {

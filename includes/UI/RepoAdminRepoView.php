@@ -5,7 +5,7 @@ namespace MediaWiki\Extension\CodeReview\UI;
 use HTMLForm;
 use MediaWiki\Extension\CodeReview\Backend\CodeRepository;
 use MediaWiki\MediaWikiServices;
-use Title;
+use MediaWiki\Title\Title;
 use User;
 
 /**

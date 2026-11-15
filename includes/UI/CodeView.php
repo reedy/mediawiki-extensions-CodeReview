@@ -2,13 +2,13 @@
 
 namespace MediaWiki\Extension\CodeReview\UI;
 
+use MediaWiki\Context\RequestContext;
 use MediaWiki\Extension\CodeReview\Backend\CodeCommentLinkerHtml;
 use MediaWiki\Extension\CodeReview\Backend\CodeCommentLinkerWiki;
 use MediaWiki\Extension\CodeReview\Backend\CodeRepository;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Permissions\Authority;
-use RequestContext;
-use SpecialPage;
+use MediaWiki\SpecialPage\SpecialPage;
 
 /**
  * Extended by CodeRevisionListView and CodeRevisionView

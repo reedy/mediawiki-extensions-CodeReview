@@ -3,14 +3,14 @@
 namespace MediaWiki\Extension\CodeReview\Backend;
 
 use Exception;
-use FormattedRCFeed;
-use IRCColourfulRCFeedFormatter;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Permissions\Authority;
-use SpecialPage;
+use MediaWiki\RCFeed\FormattedRCFeed;
+use MediaWiki\RCFeed\IRCColourfulRCFeedFormatter;
+use MediaWiki\SpecialPage\SpecialPage;
+use MediaWiki\Title\Title;
+use MediaWiki\User\User;
 use stdClass;
-use Title;
-use User;
 use Wikimedia\Rdbms\IDatabase;
 use Wikimedia\Rdbms\IResultWrapper;
 
@@ -1525,9 +1525,7 @@ class CodeRevision {
 	private function sendRecentChanges( $line ) {
 		global $wgCodeReviewRC;
 		foreach ( $wgCodeReviewRC as $rc ) {
-			/**
-			 * @var FormattedRCFeed $engine
-			 */
+			/** @var FormattedRCFeed $engine */
 			$engine = new $rc['formatter'];
 			$engine->send( $rc, $line );
 		}

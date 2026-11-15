@@ -3,9 +3,10 @@
 namespace MediaWiki\Extension\CodeReview\UI;
 
 use Exception;
-use Linker;
-use SpecialPage;
-use User;
+use MediaWiki\Linker\Linker;
+use MediaWiki\MediaWikiServices;
+use MediaWiki\SpecialPage\SpecialPage;
+use MediaWiki\User\User;
 
 /**
  * Pager for CodeRevisionListView
@@ -69,7 +70,7 @@ class CodeStatusChangeTablePager extends SvnTablePager {
 	 * @return string
 	 */
 	public function formatValue( $name, $value ) {
-		$linkRenderer = \MediaWiki\MediaWikiServices::getInstance()->getLinkRenderer();
+		$linkRenderer = MediaWikiServices::getInstance()->getLinkRenderer();
 		// Give grep a chance to find the usages:
 		// code-status-new, code-status-fixme, code-status-reverted, code-status-resolved,
 		// code-status-ok, code-status-deferred, code-status-old
@@ -88,7 +89,8 @@ class CodeStatusChangeTablePager extends SvnTablePager {
 				return $linkRenderer->makeLink(
 					SpecialPage::getTitleFor( 'Code',
 						$this->mRepo->getName() . '/status/' . $value ),
-					$this->mView->statusDesc( $value ) );
+					$this->mView->statusDesc( $value )
+				);
 			case 'cpc_user_text':
 				return Linker::userLink( -1, $value );
 			case 'cpc_removed':

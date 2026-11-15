@@ -2,7 +2,7 @@
 
 namespace MediaWiki\Extension\CodeReview\Backend;
 
-use Title;
+use MediaWiki\Title\Title;
 
 class CodeCommentLinkerWiki extends CodeCommentLinker {
 	/**

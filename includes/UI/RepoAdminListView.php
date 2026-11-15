@@ -2,10 +2,10 @@
 
 namespace MediaWiki\Extension\CodeReview\UI;
 
-use HTMLForm;
 use MediaWiki\Extension\CodeReview\Backend\CodeRepository;
-use OutputPage;
-use Title;
+use MediaWiki\HTMLForm\HTMLForm;
+use MediaWiki\Output\OutputPage;
+use MediaWiki\Title\Title;
 
 /**
  * View for viewing all of the repositories
@@ -26,8 +26,6 @@ class RepoAdminListView {
 
 	/**
 	 * Get "create new repo" form
-	 * @param OutputPage $output
-	 * @return string
 	 */
 	private function getForm( OutputPage $output ) {
 		global $wgScript;
@@ -50,8 +48,6 @@ class RepoAdminListView {
 			->setWrapperLegendMsg( 'repoadmin-new-legend' )
 			->prepareForm()
 			->displayForm( false );
-
-		return true;
 	}
 
 	public function execute() {

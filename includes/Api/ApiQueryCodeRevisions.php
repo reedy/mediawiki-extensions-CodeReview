@@ -2,9 +2,9 @@
 
 namespace MediaWiki\Extension\CodeReview\Api;
 
-use ApiBase;
-use ApiQueryBase;
-use ApiResult;
+use MediaWiki\Api\ApiBase;
+use MediaWiki\Api\ApiQueryBase;
+use MediaWiki\Api\ApiResult;
 use MediaWiki\Extension\CodeReview\Backend\CodeRepository;
 use MediaWiki\Extension\CodeReview\Backend\CodeRevision;
 use MediaWiki\Extension\CodeReview\UI\CodeRevisionListView;

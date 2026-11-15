@@ -2,10 +2,10 @@
 
 namespace MediaWiki\Extension\CodeReview\UI;
 
+use MediaWiki\Context\RequestContext;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Permissions\Authority;
-use RequestContext;
-use SpecialPage;
+use MediaWiki\SpecialPage\SpecialPage;
 
 class CodeRevisionCommitter extends CodeRevisionView {
 	public function execute() {

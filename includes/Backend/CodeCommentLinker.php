@@ -2,8 +2,9 @@
 
 namespace MediaWiki\Extension\CodeReview\Backend;
 
-use SpecialPage;
-use Title;
+use MediaWiki\SpecialPage\SpecialPage;
+use MediaWiki\Title\Title;
+use MediaWiki\Utils\UrlUtils;
 
 abstract class CodeCommentLinker {
 	/**
@@ -28,7 +29,7 @@ abstract class CodeCommentLinker {
 		$EXT_LINK_URL_CLASS = '[^][<>"\\x00-\\x20\\x7F\p{Zs}]';
 
 		$text = preg_replace_callback(
-			'/(^|[^\w[])(' . wfUrlProtocolsWithoutProtRel() . ')(' . $EXT_LINK_URL_CLASS . '+)/',
+			'/(^|[^\w[])(' . UrlUtils::validAbsoluteProtocols()() . ')(' . $EXT_LINK_URL_CLASS . '+)/',
 			[ $this, 'generalLink' ], $text );
 		$text = preg_replace_callback( '/\br(\d+)\b/',
 			[ $this, 'messageRevLink' ], $text );

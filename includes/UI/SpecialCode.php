@@ -3,7 +3,7 @@
 namespace MediaWiki\Extension\CodeReview\UI;
 
 use MediaWiki\Extension\CodeReview\Backend\CodeRepository;
-use SpecialPage;
+use MediaWiki\SpecialPage\SpecialPage;
 
 /**
  * Main UI entry point. This calls the appropriate CodeView subclass and runs it
@@ -37,9 +37,9 @@ class SpecialCode extends SpecialPage {
 	}
 
 	/**
-	 * @param string $subpage
+	 * @param string $subPage
 	 */
-	public function execute( $subpage ) {
+	public function execute( $subPage ) {
 		$this->checkPermissions();
 
 		$this->setHeaders();
@@ -54,7 +54,7 @@ class SpecialCode extends SpecialPage {
 			$out->addModuleStyles( 'ext.codereview.local' );
 		}
 
-		$view = $this->getViewFrom( $subpage );
+		$view = $this->getViewFrom( $subPage );
 		if ( $view ) {
 			$view->execute();
 		} else {
@@ -116,7 +116,6 @@ class SpecialCode extends SpecialPage {
 			}
 
 			$user = $this->getUser();
-			$view = null;
 
 			switch ( count( $params ) ) {
 				case 1:

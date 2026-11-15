@@ -2,7 +2,7 @@
 
 namespace MediaWiki\Extension\CodeReview\UI;
 
-use Html;
+use MediaWiki\Html\Html;
 
 /**
  * wordCloud Copyright 2007 Derek Harvey

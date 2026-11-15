@@ -4,7 +4,7 @@ namespace MediaWiki\Extension\CodeReview\UI;
 
 use MediaWiki\Extension\CodeReview\Backend\CodeRevision;
 use MediaWiki\MediaWikiServices;
-use SpecialPage;
+use MediaWiki\SpecialPage\SpecialPage;
 
 /**
  * Special:Code/MediaWiki/status

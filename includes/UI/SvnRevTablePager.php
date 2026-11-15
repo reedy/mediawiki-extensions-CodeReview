@@ -2,9 +2,10 @@
 
 namespace MediaWiki\Extension\CodeReview\UI;
 
+use MediaWiki\Html\Html;
 use MediaWiki\MediaWikiServices;
-use SpecialPage;
-use Xml;
+use MediaWiki\SpecialPage\SpecialPage;
+use MediaWiki\Xml\Xml;
 
 /**
  * Pager for CodeRevisionListView
@@ -131,7 +132,7 @@ class SvnRevTablePager extends SvnTablePager {
 		switch ( $name ) {
 			case 'selectforchange':
 				$sort = $this->getDefaultSort();
-				return Xml::check( "wpRevisionSelected[]", false, [ 'value' => $row->$sort ] );
+				return Html::check( "wpRevisionSelected[]", false, [ 'value' => $row->$sort ] );
 			case 'cr_id':
 				return $linkRenderer->makeLink(
 					SpecialPage::getTitleFor( 'Code', $this->mRepo->getName() . '/' . $value ),

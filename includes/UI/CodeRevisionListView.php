@@ -2,9 +2,9 @@
 
 namespace MediaWiki\Extension\CodeReview\UI;
 
-use Html;
 use MediaWiki\Extension\CodeReview\Backend\CodeRepository;
 use MediaWiki\Extension\CodeReview\Backend\CodeRevision;
+use MediaWiki\Html\Html;
 use MediaWiki\MediaWikiServices;
 use OutputPage;
 use RequestContext;
@@ -239,8 +239,10 @@ class CodeRevisionListView extends CodeView {
 			return '';
 		}
 
-		$changeInterface = Xml::fieldset( $pager->msg( 'codereview-batch-title' )->text(),
-			Xml::buildForm( $changeFields, 'codereview-batch-submit' ) );
+		$changeInterface = Xml::openElement( 'fieldset' ) . "\n";
+		$changeInterface .= Xml::element( 'legend', null, $pager->msg( 'codereview-batch-title' )->text() ) . "\n";
+		$changeInterface .= Xml::buildForm( $changeFields, 'codereview-batch-submit' ) . "\n";
+		$changeInterface .= Xml::closeElement( 'fieldset' ) . "\n";
 
 		$changeInterface .= $pager->getHiddenFields();
 		$changeInterface .= Html::hidden( 'wpBatchChangeEditToken', $user->getEditToken() );
@@ -260,34 +262,47 @@ class CodeRevisionListView extends CodeView {
 		$name = $this->mRepo->getName();
 
 		$title = SpecialPage::getTitleFor( 'Code', $name );
-		$options = [ Xml::option( '', $title->getPrefixedText(), $this->mStatus == '' ) ];
+
+		$attribs = [
+			'value' => $title->getPrefixedText(),
+			'selected' => $this->mStatus == '',
+		];
+		$options = [ Html::element( 'option', $attribs, $title->getPrefixedText() ) ];
 
 		// Give grep a chance to find the usages:
 		// code-status-new, code-status-fixme, code-status-reverted, code-status-resolved,
 		// code-status-ok, code-status-deferred, code-status-old
 		foreach ( $states as $state ) {
 			$title = SpecialPage::getTitleFor( 'Code', $name . "/status/$state" );
-			$options[] = Xml::option(
-				$pager->msg( "code-status-$state" )->text(),
-				$title->getPrefixedText(),
-				$this->mStatus == $state
-			);
+
+			$attribs = [
+				'value' => $title->getPrefixedText(),
+				'selected' => $this->mStatus == $state
+			];
+
+			$options[] = Html::element( 'option', $attribs, $title->getPrefixedText() );
 		}
 
 		return '<fieldset><legend>' .
 			wfMessage( 'code-pathsearch-legend' )->escaped() . '</legend>' .
 			'<table width="100%"><tr><td>' .
 			Xml::openElement( 'form', [ 'action' => $wgScript, 'method' => 'get' ] ) .
-			Xml::inputLabel( wfMessage( "code-pathsearch-path" )->text(), 'path', 'path', 55,
-				$this->getPathsAsString(), [ 'dir' => 'ltr' ] ) . '&#160;' .
-			Xml::label( wfMessage( 'code-pathsearch-filter' )->text(), 'code-status-filter' ) .
+			Xml::inputLabel(
+				wfMessage( "code-pathsearch-path" )->text(),
+				'path',
+				'path',
+				55,
+				$this->getPathsAsString(),
+				[ 'dir' => 'ltr' ]
+			) . '&#160;' .
+			Html::label( wfMessage( 'code-pathsearch-filter' )->text(), 'code-status-filter' ) .
 		'&#160;' .
 			Xml::openElement( 'select', [ 'id' => 'code-status-filter', 'name' => 'title' ] ) .
 			"\n" .
 			implode( "\n", $options ) .
 			"\n" .
 			Xml::closeElement( 'select' ) .
-			'&#160;' . Xml::submitButton( wfMessage( 'allpagessubmit' )->text() ) .
+			'&#160;' . Html::submitButton( wfMessage( 'allpagessubmit' )->text() ) .
 			$pager->getHiddenFields( [ 'path', 'title' ] ) .
 			Xml::closeElement( 'form' ) .
 			'</td></tr></table></fieldset>';

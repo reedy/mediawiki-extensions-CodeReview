@@ -5,8 +5,8 @@ namespace MediaWiki\Extension\CodeReview\Backend;
 use Exception;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Storage\SqlBlobStore;
+use MediaWiki\User\User;
 use stdClass;
-use User;
 
 /**
  * Core class for interacting with a repository of code.

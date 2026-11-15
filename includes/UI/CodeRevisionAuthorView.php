@@ -2,12 +2,12 @@
 
 namespace MediaWiki\Extension\CodeReview\UI;
 
-use Linker;
+use MediaWiki\Context\RequestContext;
 use MediaWiki\Extension\CodeReview\Backend\CodeRepository;
+use MediaWiki\Linker\Linker;
 use MediaWiki\MediaWikiServices;
-use RequestContext;
-use SpecialPage;
-use User;
+use MediaWiki\SpecialPage\SpecialPage;
+use MediaWiki\User\User;
 
 class CodeRevisionAuthorView extends CodeRevisionListView {
 	/** @var User|bool */

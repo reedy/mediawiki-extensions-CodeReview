@@ -71,7 +71,7 @@ class CodeDiffHighlighterTest extends MediaWikiIntegrationTestCase {
 				'@@ -1 +1 @@'
 			],
 
-			# Some chunks which probably are non sense but yet must be
+			# Some chunks which probably are nonsense but yet must be
 			# considered valid by our chunk parsing code.
 			[
 				[ 25, 1, 26, 1 ],

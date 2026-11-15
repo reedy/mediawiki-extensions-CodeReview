@@ -3,9 +3,10 @@
 namespace MediaWiki\Extension\CodeReview\UI;
 
 use Exception;
-use Linker;
-use SpecialPage;
-use User;
+use MediaWiki\Linker\Linker;
+use MediaWiki\MediaWikiServices;
+use MediaWiki\SpecialPage\SpecialPage;
+use MediaWiki\User\User;
 
 /**
  * Pager for CodeCommentsListView
@@ -69,7 +70,7 @@ class CodeCommentsTablePager extends SvnTablePager {
 
 	/** @inheritDoc */
 	public function formatValue( $name, $value ) {
-		$linkRenderer = \MediaWiki\MediaWikiServices::getInstance()->getLinkRenderer();
+		$linkRenderer = MediaWikiServices::getInstance()->getLinkRenderer();
 		switch ( $name ) {
 			case 'cc_rev_id':
 				return $linkRenderer->makeLink(
@@ -86,7 +87,6 @@ class CodeCommentsTablePager extends SvnTablePager {
 			case 'cc_user_text':
 				return Linker::userLink( -1, $value );
 			case 'cr_message':
-				return $this->mView->messageFragment( $value );
 			case 'cc_text':
 				return $this->mView->messageFragment( $value );
 			case 'cc_timestamp':

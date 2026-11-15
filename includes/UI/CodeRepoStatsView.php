@@ -5,8 +5,8 @@ namespace MediaWiki\Extension\CodeReview\UI;
 use MediaWiki\Extension\CodeReview\Backend\CodeRevision;
 use MediaWiki\Extension\CodeReview\Backend\RepoStats;
 use MediaWiki\MediaWikiServices;
-use OutputPage;
-use SpecialPage;
+use MediaWiki\Output\OutputPage;
+use MediaWiki\SpecialPage\SpecialPage;
 
 /**
  * Special:Code/MediaWiki/stats

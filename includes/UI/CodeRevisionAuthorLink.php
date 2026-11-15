@@ -2,13 +2,12 @@
 
 namespace MediaWiki\Extension\CodeReview\UI;
 
-use Html;
-use Linker;
+use MediaWiki\Exception\PermissionsError;
 use MediaWiki\Extension\CodeReview\Backend\CodeRepository;
-use PermissionsError;
-use SpecialPage;
-use User;
-use Xml;
+use MediaWiki\Html\Html;
+use MediaWiki\Linker\Linker;
+use MediaWiki\SpecialPage\SpecialPage;
+use MediaWiki\User\User;
 
 /**
  * Special:Code/MediaWiki/author/johndoe/link

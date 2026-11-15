@@ -3,7 +3,7 @@
 namespace MediaWiki\Extension\CodeReview\Backend;
 
 use Exception;
-use Html;
+use MediaWiki\Html\Html;
 use Xml;
 
 /**

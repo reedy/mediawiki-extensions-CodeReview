@@ -3,8 +3,8 @@
 namespace MediaWiki\Extension\CodeReview\UI;
 
 use MediaWiki\Extension\CodeReview\Backend\CodeRepository;
+use MediaWiki\Pager\TablePager;
 use stdClass;
-use TablePager;
 
 abstract class SvnTablePager extends TablePager {
 	/**

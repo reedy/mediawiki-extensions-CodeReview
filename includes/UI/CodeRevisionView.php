@@ -2,21 +2,21 @@
 
 namespace MediaWiki\Extension\CodeReview\UI;
 
-use Html;
-use Linker;
+use MediaWiki\Context\RequestContext;
 use MediaWiki\Extension\CodeReview\Backend\CodeComment;
 use MediaWiki\Extension\CodeReview\Backend\CodeDiffHighlighter;
 use MediaWiki\Extension\CodeReview\Backend\CodePropChange;
 use MediaWiki\Extension\CodeReview\Backend\CodeRepository;
 use MediaWiki\Extension\CodeReview\Backend\CodeRevision;
 use MediaWiki\Extension\CodeReview\Backend\CodeSignoff;
+use MediaWiki\Html\Html;
+use MediaWiki\Linker\Linker;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Permissions\Authority;
 use MediaWiki\ResourceLoader\ResourceLoader;
-use RequestContext;
-use SpecialPage;
+use MediaWiki\SpecialPage\SpecialPage;
+use MediaWiki\Title\Title;
 use stdClass;
-use Title;
 use Xml;
 
 /**
@@ -476,8 +476,11 @@ class CodeRevisionView extends CodeView {
 		$states = CodeRevision::getPossibleStates();
 		$out = '';
 		foreach ( $states as $state ) {
-			$out .= Xml::option( $view->statusDesc( $state ), $state,
-						$status === $state );
+			$attribs = [
+				'value' => $state,
+				'selected' => $status === $state,
+			];
+			$out .= Html::element( 'option', $attribs, $view->statusDesc( $state ) );
 		}
 		return $out;
 	}
@@ -490,10 +493,20 @@ class CodeRevisionView extends CodeView {
 	 */
 	public static function addTagForm( $addTags, $removeTags ) {
 		return '<div><table><tr><td>' .
-			Xml::inputLabel( wfMessage( 'code-rev-tag-add' )->text(), 'wpTag', 'wpTag', 20,
-				self::listTags( $addTags ) ) . '</td><td>&#160;</td><td>' .
-			Xml::inputLabel( wfMessage( 'code-rev-tag-remove' )->text(), 'wpRemoveTag',
-				'wpRemoveTag', 20, self::listTags( $removeTags ) ) . '</td></tr></table></div>';
+			Xml::inputLabel(
+				wfMessage( 'code-rev-tag-add' )->text(),
+				'wpTag',
+				'wpTag',
+				20,
+				self::listTags( $addTags )
+			) . '</td><td>&#160;</td><td>' .
+			Xml::inputLabel(
+				wfMessage( 'code-rev-tag-remove' )->text(),
+				'wpRemoveTag',
+				'wpRemoveTag',
+				20,
+				self::listTags( $removeTags )
+			) . '</td></tr></table></div>';
 	}
 
 	/**
@@ -624,8 +637,8 @@ class CodeRevisionView extends CodeView {
 	 */
 	protected function stubDiffLoader() {
 		global $wgOut;
-		$encRepo = Xml::encodeJsVar( $this->mRepo->getName() );
-		$encRev = Xml::encodeJsVar( $this->mRev->getId() );
+		$encRepo = Html::encodeJsVar( $this->mRepo->getName() );
+		$encRev = Html::encodeJsVar( $this->mRev->getId() );
 		$wgOut->addHTML( Html::inlineScript( ResourceLoader::makeInlineCodeWithModule(
 			'ext.codereview.loaddiff',
 			"CodeReview.loadDiff($encRepo,$encRev);"
@@ -982,11 +995,11 @@ class CodeRevisionView extends CodeView {
 	protected function signoffButtons( $signOffs ) {
 		$userSignOffs = $this->getUserSignoffs( $signOffs );
 		$strikeButton = count( $userSignOffs )
-			? Xml::submitButton( wfMessage( 'code-signoff-strike' )->text(),
+			? Html::submitButton( wfMessage( 'code-signoff-strike' )->text(),
 				[ 'name' => 'wpStrikeSignoffs' ] )
 			: '';
 		$signoffText = wfMessage( 'code-signoff-signoff' )->escaped();
-		$signoffButton = Xml::submitButton( wfMessage( 'code-signoff-submit' )->text(),
+		$signoffButton = Html::submitButton( wfMessage( 'code-signoff-submit' )->text(),
 			[ 'name' => 'wpSignoff' ] );
 		$checks = '';
 
@@ -996,7 +1009,7 @@ class CodeRevisionView extends CodeView {
 					'id' => "wpSignoffFlags-$flag",
 					'disabled' => isset( $userSignOffs[$flag] ),
 				] ) .
-				' ' . Xml::label( wfMessage( "code-signoff-flag-$flag" )->text(),
+				' ' . Html::label( wfMessage( "code-signoff-flag-$flag" )->text(),
 				"wpSignoffFlags-$flag" ) . ' ';
 		}
 		return "<tr class='mw-codereview-signoffbuttons'><td colspan='4'>$strikeButton " .
@@ -1030,10 +1043,10 @@ class CodeRevisionView extends CodeView {
 	 * @return string HTML
 	 */
 	protected function referenceButtons( $inputName ) {
-		$removeButton = Xml::submitButton( wfMessage( 'code-reference-remove' )->text(),
+		$removeButton = Html::submitButton( wfMessage( 'code-reference-remove' )->text(),
 			[ 'name' => "wpRemove{$inputName}" ] );
 		$associateText = wfMessage( 'code-reference-associate' )->escaped();
-		$associateButton = Xml::submitButton(
+		$associateButton = Html::submitButton(
 			wfMessage( 'code-reference-associate-submit' )->text(),
 			[ 'name' => "wpAdd{$inputName}Submit" ]
 		);
@@ -1048,19 +1061,19 @@ class CodeRevisionView extends CodeView {
 	 */
 	protected function addActionButtons() {
 		return '<div id="mw-codereview-comment-buttons">' .
-			Xml::submitButton( wfMessage( 'code-rev-submit' )->text(),
+			Html::submitButton( wfMessage( 'code-rev-submit' )->text(),
 				[ 'name' => 'wpSave',
 					'accesskey' => wfMessage( 'code-rev-submit-accesskey' )->text() ]
 			) . ' ' .
-			Xml::submitButton( wfMessage( 'code-rev-submit-next' )->text(),
+			Html::submitButton( wfMessage( 'code-rev-submit-next' )->text(),
 				[ 'name' => 'wpSaveAndNext',
 					'accesskey' => wfMessage( 'code-rev-submit-next-accesskey' )->text() ]
 			) . ' ' .
-			Xml::submitButton( wfMessage( 'code-rev-next' )->text(),
+			Html::submitButton( wfMessage( 'code-rev-next' )->text(),
 				[ 'name' => 'wpNext',
 					'accesskey' => wfMessage( 'code-rev-next-accesskey' )->text() ]
 			) . ' ' .
-			Xml::submitButton( wfMessage( 'code-rev-comment-preview' )->text(),
+			Html::submitButton( wfMessage( 'code-rev-comment-preview' )->text(),
 				[ 'name' => 'wpPreview',
 					'accesskey' => wfMessage( 'code-rev-comment-preview-accesskey' )->text() ]
 			) .

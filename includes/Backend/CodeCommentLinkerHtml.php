@@ -2,9 +2,9 @@
 
 namespace MediaWiki\Extension\CodeReview\Backend;
 
-use Linker;
+use MediaWiki\Linker\Linker;
 use MediaWiki\MediaWikiServices;
-use Title;
+use MediaWiki\Title\Title;
 
 class CodeCommentLinkerHtml extends CodeCommentLinker {
 

@@ -2,9 +2,9 @@
 
 namespace MediaWiki\Extension\CodeReview;
 
-use DatabaseUpdater;
+use MediaWiki\Installer\DatabaseUpdater;
+use MediaWiki\Output\OutputPage;
 use MediaWiki\RenameUser\RenameuserSQL;
-use OutputPage;
 
 /**
  * Class containing hooked functions used by the CodeReview extension.

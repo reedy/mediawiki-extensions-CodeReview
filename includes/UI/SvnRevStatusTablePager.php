@@ -2,7 +2,8 @@
 
 namespace MediaWiki\Extension\CodeReview\UI;
 
-use SpecialPage;
+
+use MediaWiki\SpecialPage\SpecialPage;
 
 class SvnRevStatusTablePager extends SvnRevTablePager {
 

@@ -2,8 +2,8 @@
 
 namespace MediaWiki\Extension\CodeReview\Api;
 
-use ApiQueryBase;
-use ApiResult;
+use MediaWiki\Api\ApiQueryBase;
+use MediaWiki\Api\ApiResult;
 use MediaWiki\Extension\CodeReview\Backend\CodeRepository;
 use Wikimedia\ParamValidator\ParamValidator;
 

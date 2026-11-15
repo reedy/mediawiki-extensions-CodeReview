@@ -2,10 +2,10 @@
 
 namespace MediaWiki\Extension\CodeReview\UI;
 
+use MediaWiki\Context\RequestContext;
 use MediaWiki\Extension\CodeReview\Backend\CodeRepository;
 use MediaWiki\MediaWikiServices;
-use RequestContext;
-use SpecialPage;
+use MediaWiki\SpecialPage\SpecialPage;
 use User;
 
 /**
